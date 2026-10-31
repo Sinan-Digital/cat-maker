@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cat Maker ✦ Chosen By Cats</title>
+<meta name="description" content="Make your cat a Y2K character in 10 seconds. Pick the fur, the eyes and the name, get your Cat Card for free and put it on a mug or tee.">
+<meta property="og:title" content="Make your cat a character ✦ Chosen By Cats">
+<meta property="og:description" content="Pick the fur, the eyes and the name. Get your own Y2K Cat Card for free.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://sinan-digital.github.io/cat-maker/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#c9b8ff">
+<link rel="icon" href="favicon.png">
+<style>
+@font-face { font-family: "Archivo Maker"; src: url(archivo.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
+:root { --ink: #2a1550; --violet: #6a4cff; --hot: #ff3d9a; --pink: #ff7ac8; --baby: #ffc2e6; --sky: #8fd3ff; --lilac: #c4b2ff; --butter: #fff3a3; --aqua: #6fe3ff; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { background: #c9b8ff; }
+body { margin: 0; min-height: 100vh; font-family: "Archivo Maker", system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); line-height: 1.45;
+  background: radial-gradient(circle at 15% 8%, rgba(255,255,255,.55) 0 3px, transparent 4px), radial-gradient(circle at 82% 14%, rgba(255,255,255,.6) 0 4px, transparent 5px),
+    radial-gradient(circle at 70% 46%, rgba(255,255,255,.45) 0 3px, transparent 4px), radial-gradient(circle at 24% 62%, rgba(255,255,255,.5) 0 4px, transparent 5px),
+    linear-gradient(180deg, #8fd3ff 0%, #c9b8ff 42%, #ffc2e6 100%); background-attachment: fixed; }
+.wrap { max-width: 560px; margin: 0 auto; padding: 14px 16px 40px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+header img { height: 58px; width: auto; display: block; }
+.pill { display: inline-block; padding: 9px 16px; border-radius: 999px; background: rgba(255,255,255,.75); border: 3px solid #fff; color: var(--violet); font-weight: 800; font-size: 14px; text-decoration: none; box-shadow: 0 4px 0 rgba(106,76,255,.35); }
+#title { display: block; width: 100%; height: auto; margin: 4px 0 0; filter: drop-shadow(0 6px 10px rgba(106,76,255,.25)); }
+.lead { text-align: center; font-weight: 700; margin: 0 8px 14px; }
+#card { display: block; width: 100%; max-width: 420px; height: auto; margin: 0 auto 6px; filter: drop-shadow(0 14px 22px rgba(60,20,120,.35)); }
+.panel { background: rgba(255,255,255,.58); border: 3px solid #fff; border-radius: 28px; padding: 18px 16px; margin: 14px 0; box-shadow: 0 8px 30px rgba(106,76,255,.2); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+h2 { margin: 0 0 4px; font-size: 22px; font-weight: 900; letter-spacing: .2px; }
+h3 { margin: 16px 0 8px; font-size: 13px; font-weight: 900; letter-spacing: 1.4px; text-transform: uppercase; color: var(--violet); }
+h3:first-of-type { margin-top: 4px; }
+input[type=text] { width: 100%; font: inherit; font-weight: 900; font-size: 22px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink); background: #fff; border: 3px solid var(--lilac); border-radius: 18px; padding: 12px 16px; outline: none; }
+input[type=text]:focus { border-color: var(--hot); box-shadow: 0 0 0 4px rgba(255,61,154,.22); }
+.sw { display: flex; flex-wrap: wrap; gap: 10px; }
+.sw button { width: 46px; height: 46px; border-radius: 50%; border: 3px solid #fff; padding: 0; cursor: pointer; box-shadow: 0 3px 0 rgba(42,21,80,.25); transition: transform .12s; position: relative; }
+.sw button:hover { transform: translateY(-2px); }
+.sw button[aria-pressed=true] { outline: 4px solid var(--violet); outline-offset: 2px; transform: scale(1.06); }
+.sw.eyes button { width: 40px; height: 40px; background-image: radial-gradient(circle at 36% 32%, #fff 0 12%, transparent 13%), radial-gradient(circle at 50% 50%, #1a1022 0 28%, transparent 29%); }
+.coatname, .eyename { font-weight: 800; font-size: 13px; margin: 8px 2px 0; color: var(--ink); opacity: .8; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { appearance: none; font: inherit; font-weight: 900; font-size: 17px; color: #fff; text-decoration: none; text-align: center; cursor: pointer; border: 3px solid #fff; border-radius: 999px; padding: 14px 22px; background: linear-gradient(#ff8fd0, var(--hot)); box-shadow: 0 6px 0 #b0207a, 0 14px 24px rgba(106,76,255,.3); text-shadow: 0 2px 0 rgba(120,10,70,.35); transition: transform .12s, box-shadow .12s; display: inline-block; }
+.btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b0207a, 0 6px 12px rgba(106,76,255,.3); }
+.btn.alt { background: linear-gradient(#9fe9ff, #3fb6e8); box-shadow: 0 6px 0 #1f7fae, 0 14px 24px rgba(31,127,174,.3); text-shadow: 0 2px 0 rgba(10,70,110,.35); }
+.btn.big { width: 100%; font-size: 20px; padding: 17px 22px; }
+.grow { flex: 1 1 150px; }
+.prod { display: grid; gap: 10px; }
+.prod label { display: flex; align-items: center; gap: 12px; background: #fff; border: 3px solid var(--lilac); border-radius: 18px; padding: 11px 14px; cursor: pointer; font-weight: 800; }
+.prod input { accent-color: var(--hot); width: 22px; height: 22px; margin: 0; }
+.prod label:has(input:checked) { border-color: var(--hot); box-shadow: 0 0 0 4px rgba(255,61,154,.2); }
+.prod small { display: block; font-weight: 600; opacity: .75; }
+.prod .price { margin-left: auto; font-weight: 900; color: var(--violet); white-space: nowrap; }
+ol.steps { margin: 6px 0 14px; padding-left: 22px; font-weight: 700; }
+ol.steps li { margin: 5px 0; }
+.note { font-size: 13px; font-weight: 600; opacity: .85; margin: 10px 4px 0; }
+.msg { min-height: 22px; font-weight: 800; color: var(--violet); text-align: center; margin: 10px 0 0; }
+footer { text-align: center; font-size: 12.5px; font-weight: 600; opacity: .85; margin-top: 22px; }
+footer a { color: var(--violet); font-weight: 800; }
+@media (prefers-reduced-motion: no-preference) { #card { animation: floaty 5s ease-in-out infinite; } @keyframes floaty { 50% { transform: translateY(-6px); } } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="logo.png" alt="Chosen By Cats" width="152" height="58">
+    <a class="pill" href="https://whatif-simulated-shop.fourthwall.com/collections/y2k-edition">Shop ✦</a>
+  </header>
+
+  <canvas id="title" width="1000" height="360" role="img" aria-label="Make your cat a character"></canvas>
+  <p class="lead">Pick the fur, the eyes and the name. Your Cat Card is free ✦</p>
+
+  <canvas id="card" width="1000" height="1400" role="img" aria-label="Your cat card"></canvas>
+
+  <section class="panel" aria-label="Design your cat">
+    <h3>Name</h3>
+    <input id="name" type="text" maxlength="12" value="MANGO" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Your cat's name" placeholder="YOUR CAT'S NAME">
+    <h3>Fur</h3>
+    <div id="coats" class="sw" role="group" aria-label="Fur"></div>
+    <div id="coatname" class="coatname"></div>
+    <h3>Eyes</h3>
+    <div id="eyes" class="sw eyes" role="group" aria-label="Eyes"></div>
+    <div id="eyename" class="eyename"></div>
+    <div class="row" style="margin-top:16px">
+      <button class="btn alt grow" id="dl" type="button">Download my card</button>
+      <button class="btn grow" id="share" type="button" hidden>Share ✦</button>
+    </div>
+  </section>
+
+  <section class="panel" id="order" aria-label="Put your cat on something">
+    <h2>Put your cat on something ✦</h2>
+    <p class="note" style="margin-top:0">Your name, your fur, your eyes, printed on demand. Choose what you'd love:</p>
+    <div class="prod" id="prod">
+      <label><input type="radio" name="p" value="Mug (11 oz)" checked><span>Mug 11 oz<small>pink or blue inside</small></span><span class="price">from $24</span></label>
+      <label><input type="radio" name="p" value="Mug (15 oz)"><span>Mug 15 oz<small>pink or blue inside</small></span><span class="price">from $27</span></label>
+      <label><input type="radio" name="p" value="Baby Tee"><span>Baby Tee<small>black, white or baby pink</small></span><span class="price">from $39</span></label>
+    </div>
+    <h3>How it works</h3>
+    <ol class="steps">
+      <li>Tap <b>Send my cat</b>: your details are copied and our Instagram DMs open. Paste, send.</li>
+      <li>We reply with your preview and a private checkout link, usually within a day or two.</li>
+      <li>You order. It's made for you and ships worldwide in about 5 to 11 days.</li>
+    </ol>
+    <button class="btn big" id="send" type="button">Send my cat ✦</button>
+    <div class="msg" id="msg" role="status" aria-live="polite"></div>
+    <p class="note">No Instagram? Use the <a href="https://whatif-simulated-shop.fourthwall.com/contact" style="color:var(--violet);font-weight:800">shop contact form</a> and paste your details there. Prices are before shipping and tax. Code <b>CHOSEN10</b> = 10% off.</p>
+  </section>
+
+  <footer>
+    <p>Made by the cats at <a href="https://whatif-simulated-shop.fourthwall.com/">Chosen By Cats</a> ✦ TikTok <a href="https://www.tiktok.com/@whatif.simulated">@whatif.simulated</a> ✦ Instagram <a href="https://www.instagram.com/whatif_simulated/">@whatif_simulated</a></p>
+    <p>This page stores nothing about you; your cat lives in the link. It is hosted on GitHub Pages, which may log your IP address.
+    <a href="https://sharin-media.de/impressum/">Imprint</a> ✦ <a href="https://sharin-media.de/datenschutz/">Privacy</a></p>
+  </footer>
+</div>
+
+<script>
+(() => {
+'use strict';
+const FONT = '"Archivo Maker"';
+const Y = { hot: '#ff3d9a', pink: '#ff7ac8', baby: '#ffc2e6', aqua: '#6fe3ff', sky: '#8fd3ff', lilac: '#c4b2ff', violet: '#6a4cff', butter: '#fff3a3', ink: '#2a1550' };
+const COATS = [
+  ['orange-tabby', 'Orange tabby', '#f5b46a'], ['ginger', 'Ginger', '#f7c98b'], ['cream-tabby', 'Cream tabby', '#ebd2a8'], ['cream', 'Cream', '#f1e4cc'],
+  ['brown-tabby', 'Brown tabby', '#b08c68'], ['gray-tabby', 'Gray tabby', '#b9bec7'], ['silver', 'Silver', '#c9d0da'], ['charcoal', 'Charcoal', '#6b6f78'],
+  ['black', 'Black', '#3d3d44'], ['white', 'White', '#f6f4ef'],
+  ['tuxedo', 'Tuxedo', 'linear-gradient(90deg,#3d3d44 50%,#f6f4ef 50%)'], ['calico', 'Calico', 'conic-gradient(#f5a24a 0 33%,#f6f4ef 0 66%,#3d3d44 0)'],
+];
+const EYES = [['green', 'Green', '#7ccf4a'], ['blue', 'Blue', '#5fb0e8'], ['amber', 'Amber', '#f2c230'], ['copper', 'Copper', '#d9822b']];
+const $ = (id) => document.getElementById(id);
+const st = { name: 'MANGO', coat: 'orange-tabby', eye: 'green' };
+
+/* ——— gleiche Zeichenhelfer wie bei den Shop-Motiven (Y2K-Stil) ——— */
+const canvas2d = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d')]; };
+const rng = (seed) => { let s = seed; return () => ((s = (s * 16807) % 2147483647) / 2147483647); };
+function star4(g, x, y, r, fill = '#ffffff', rot = 0, glow = 0) {
+  g.save(); g.translate(x, y); g.rotate(rot);
+  if (glow) { const gr = g.createRadialGradient(0, 0, 0, 0, 0, r * 1.7); gr.addColorStop(0, 'rgba(255,255,255,0.85)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.beginPath(); g.arc(0, 0, r * 1.7, 0, 6.3); g.fill(); }
+  g.fillStyle = fill; g.beginPath(); g.moveTo(0, -r);
+  g.quadraticCurveTo(r * 0.14, -r * 0.14, r, 0); g.quadraticCurveTo(r * 0.14, r * 0.14, 0, r); g.quadraticCurveTo(-r * 0.14, r * 0.14, -r, 0); g.quadraticCurveTo(-r * 0.14, -r * 0.14, 0, -r); g.fill(); g.restore();
+}
+function chromeHeart(g, cx, cy, s, rot = 0, tint = 'blue') {
+  g.save(); g.translate(cx, cy); g.rotate(rot); g.scale(s, s);
+  g.beginPath(); g.moveTo(0, 0.95); g.bezierCurveTo(-1.35, 0.1, -1.0, -1.05, 0, -0.5); g.bezierCurveTo(1.0, -1.05, 1.35, 0.1, 0, 0.95); g.closePath();
+  const gr = g.createLinearGradient(0, -1, 0, 1);
+  const stops = tint === 'pink' ? ['#ffffff', '#ffd1ea', '#ff6fb8', '#ffe9f5', '#c8438d', '#ffd9ee'] : ['#ffffff', '#d6e8ff', '#7f9fe0', '#f2f7ff', '#5b73b5', '#e4eeff'];
+  stops.forEach((c, i) => gr.addColorStop(i / (stops.length - 1), c)); g.fillStyle = gr; g.fill();
+  g.lineJoin = 'round'; g.lineWidth = 0.09; g.strokeStyle = Y.ink; g.stroke();
+  g.fillStyle = 'rgba(255,255,255,0.8)'; g.beginPath(); g.ellipse(-0.5, -0.36, 0.3, 0.13, -0.6, 0, 6.3); g.fill();
+  g.restore();
+}
+function butterfly(g, x, y, s, rot = 0, c1 = '#ff7ac8', c2 = '#8f6bff') {
+  g.save(); g.translate(x, y); g.rotate(rot); g.scale(s, s);
+  for (const m of [1, -1]) {
+    g.save(); g.scale(m, 1);
+    const up = g.createLinearGradient(0, -1, 1, 0.2); up.addColorStop(0, c1); up.addColorStop(1, c2);
+    g.fillStyle = up; g.beginPath(); g.moveTo(0.05, 0); g.bezierCurveTo(0.2, -1.1, 1.3, -1.25, 1.15, -0.25); g.bezierCurveTo(1.1, 0.15, 0.5, 0.15, 0.05, 0); g.fill();
+    g.fillStyle = c2; g.beginPath(); g.moveTo(0.05, 0.05); g.bezierCurveTo(0.6, 0.15, 1.0, 0.45, 0.8, 0.85); g.bezierCurveTo(0.55, 1.1, 0.15, 0.6, 0.05, 0.05); g.fill();
+    g.lineWidth = 0.07; g.strokeStyle = Y.ink; g.lineJoin = 'round'; g.stroke();
+    g.fillStyle = 'rgba(255,255,255,0.65)'; g.beginPath(); g.ellipse(0.62, -0.55, 0.2, 0.1, -0.5, 0, 6.3); g.fill();
+    g.restore();
+  }
+  g.fillStyle = Y.ink; g.beginPath(); g.ellipse(0, 0.1, 0.07, 0.5, 0, 0, 6.3); g.fill();
+  g.strokeStyle = Y.ink; g.lineWidth = 0.05; g.beginPath(); g.moveTo(0, -0.35); g.quadraticCurveTo(-0.15, -0.7, -0.3, -0.75); g.moveTo(0, -0.35); g.quadraticCurveTo(0.15, -0.7, 0.3, -0.75); g.stroke();
+  g.restore();
+}
+function y2kBackdrop(g, W, H, { seed = 5, stars = 26, hearts = 5, butterflies = 3, top = '#8fd3ff', mid = '#c9b8ff', bot = '#ffc2e6' } = {}) {
+  const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, top); gr.addColorStop(0.55, mid); gr.addColorStop(1, bot); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  const R = rng(seed), m = Math.min(W, H);
+  for (let i = 0; i < 14; i++) { const x = R() * W, y = R() * H, r = (0.05 + R() * 0.12) * m, bg = g.createRadialGradient(x, y, 0, x, y, r); bg.addColorStop(0, 'rgba(255,255,255,0.30)'); bg.addColorStop(0.86, 'rgba(255,255,255,0.12)'); bg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = bg; g.beginPath(); g.arc(x, y, r, 0, 6.3); g.fill(); }
+  for (let i = 0; i < stars; i++) star4(g, R() * W, R() * H, (0.012 + R() * 0.03) * m, i % 4 ? '#ffffff' : Y.butter, 0, 1);
+  for (let i = 0; i < hearts; i++) chromeHeart(g, R() * W, R() * H, (0.035 + R() * 0.04) * m, (R() - 0.5) * 0.8, i % 2 ? 'pink' : 'blue');
+  for (let i = 0; i < butterflies; i++) butterfly(g, R() * W, R() * H, (0.05 + R() * 0.04) * m, (R() - 0.5) * 1.0);
+}
+function bubbleText(g, text, cx, baseY, size, { maxW = Infinity, fill = ['#ffffff', '#ff9fd8', '#ff3d9a'], edge = '#43229e', rim = '#ffffff', letter = 0.02 } = {}) {
+  g.save(); g.font = `900 ${size}px ${FONT}`; if ('letterSpacing' in g) g.letterSpacing = `${(size * letter).toFixed(1)}px`;
+  let w = g.measureText(text).width; if (w > maxW) { size *= maxW / w; g.font = `900 ${size}px ${FONT}`; if ('letterSpacing' in g) g.letterSpacing = `${(size * letter).toFixed(1)}px`; w = g.measureText(text).width; }
+  const pad = size * 0.5, [t, tg] = canvas2d(Math.ceil(w + pad * 2), Math.ceil(size * 1.8 + pad));
+  tg.font = g.font; if ('letterSpacing' in tg) tg.letterSpacing = g.letterSpacing; tg.textAlign = 'center'; tg.textBaseline = 'alphabetic'; tg.lineJoin = 'round';
+  const bx = t.width / 2, by = size * 1.15 + pad / 2;
+  tg.shadowColor = 'rgba(40,10,110,0.45)'; tg.shadowBlur = size * 0.08; tg.shadowOffsetY = size * 0.06;
+  tg.lineWidth = size * 0.44; tg.strokeStyle = edge; tg.strokeText(text, bx, by); tg.shadowColor = 'transparent';
+  tg.lineWidth = size * 0.30; tg.strokeStyle = rim; tg.strokeText(text, bx, by);
+  const gr = tg.createLinearGradient(0, by - size * 0.8, 0, by); fill.forEach((c, i) => gr.addColorStop(i / (fill.length - 1), c)); tg.fillStyle = gr; tg.fillText(text, bx, by);
+  tg.globalCompositeOperation = 'source-atop'; const gl2 = tg.createLinearGradient(0, by - size * 0.85, 0, by - size * 0.35); gl2.addColorStop(0, 'rgba(255,255,255,0.8)'); gl2.addColorStop(1, 'rgba(255,255,255,0)'); tg.fillStyle = gl2; tg.fillRect(0, by - size * 0.85, t.width, size * 0.5);
+  g.drawImage(t, cx - t.width / 2, baseY - by); g.restore(); return size;
+}
+
+/* ——— Titel und Cat Card ——— */
+function drawTitle() {
+  const cv = $('title'), g = cv.getContext('2d'), W = cv.width, H = cv.height; g.clearRect(0, 0, W, H);
+  bubbleText(g, 'MAKE YOUR CAT', W / 2, 150, 130, { maxW: W * 0.94 });
+  bubbleText(g, 'A CHARACTER ✦', W / 2, 295, 104, { maxW: W * 0.94, fill: ['#ffffff', '#7fe6ff', '#1fa8e8'] });
+}
+const sprites = {};
+function sprite(coat, eye, cb) {
+  const k = coat + '_' + eye; if (sprites[k]) { if (sprites[k].complete) cb(sprites[k]); else sprites[k].addEventListener('load', () => cb(sprites[k])); return; }
+  const im = new Image(); im.decoding = 'async'; im.addEventListener('load', () => cb(im)); im.src = 'sprites/' + k + '.webp'; sprites[k] = im;
+}
+function drawCard(img) {
+  const cv = $('card'), g = cv.getContext('2d'), W = cv.width, H = cv.height, name = (st.name || 'YOUR CAT').trim() || 'YOUR CAT';
+  g.clearRect(0, 0, W, H);
+  const rr = W * 0.06; g.save(); g.beginPath(); g.roundRect(0, 0, W, H, rr); g.clip();
+  const holo = g.createLinearGradient(0, 0, W, H); ['#ff9ad5', '#ffe58a', '#9dffd9', '#8fd3ff', '#c4b2ff', '#ff9ad5'].forEach((col, i, a) => holo.addColorStop(i / (a.length - 1), col)); g.fillStyle = holo; g.fillRect(0, 0, W, H);
+  const inner = W * 0.045; g.beginPath(); g.roundRect(inner, inner, W - 2 * inner, H - 2 * inner, rr * 0.7); g.fillStyle = '#fff7fc'; g.fill();
+  const wx = W * 0.09, wy = H * 0.12, ww = W * 0.82, wh = H * 0.5;
+  g.save(); g.beginPath(); g.roundRect(wx, wy, ww, wh, ww * 0.12); g.clip(); y2kBackdrop(g, W, H, { seed: 61, stars: 22, hearts: 4, butterflies: 2 });
+  if (img) g.drawImage(img, wx, wy + wh * 0.05, ww, wh * 0.95); g.restore();
+  g.lineWidth = W * 0.012; g.strokeStyle = Y.violet; g.beginPath(); g.roundRect(wx, wy, ww, wh, ww * 0.12); g.stroke();
+  g.fillStyle = Y.ink; g.textAlign = 'left'; let fs = H * 0.052; g.font = `900 ${fs}px ${FONT}`; const mw = g.measureText(name).width; if (mw > W * 0.5) { fs *= W * 0.5 / mw; g.font = `900 ${fs}px ${FONT}`; }
+  g.fillText(name, W * 0.09, H * 0.085);
+  g.textAlign = 'right'; g.font = `800 ${H * 0.026}px ${FONT}`; g.fillStyle = Y.violet; g.fillText('TYPE: CHOSEN ✦', W * 0.91, H * 0.085);
+  let h = 7; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) % 997;
+  const stats = [['CUTENESS', 100], ['ZOOMIES', 60 + h % 40], ['SLOW BLINK', 80 + h % 20], ['NAP LEVEL', 70 + (h >> 2) % 30]];
+  stats.forEach(([n, v], i) => { const y = H * 0.67 + i * H * 0.062; g.textAlign = 'left'; g.font = `800 ${H * 0.0245}px ${FONT}`; g.fillStyle = Y.ink; g.fillText(n, W * 0.09, y + H * 0.018); g.fillStyle = 'rgba(106,76,255,0.18)'; g.beginPath(); g.roundRect(W * 0.38, y, W * 0.4, H * 0.026, H * 0.013); g.fill(); const bg = g.createLinearGradient(W * 0.38, 0, W * 0.78, 0); bg.addColorStop(0, '#ff7ac8'); bg.addColorStop(1, '#8f6bff'); g.fillStyle = bg; g.beginPath(); g.roundRect(W * 0.38, y, W * 0.4 * v / 100, H * 0.026, H * 0.013); g.fill(); g.textAlign = 'right'; g.fillStyle = Y.ink; g.fillText(String(v), W * 0.91, y + H * 0.02); });
+  g.textAlign = 'center'; g.fillStyle = Y.violet; g.font = `800 ${H * 0.022}px ${FONT}`; g.fillText('OFFICIALLY CHOSEN ✦ NO. ' + String(100 + h % 900), W / 2, H * 0.945);
+  g.restore();
+}
+let drawSeq = 0;
+function redraw() { const my = ++drawSeq; drawCard(null); sprite(st.coat, st.eye, (img) => { if (my === drawSeq) drawCard(img); }); }
+
+/* ——— Bedienung ——— */
+const coatLabel = (id) => (COATS.find((c) => c[0] === id) || [])[1];
+const eyeLabel = (id) => (EYES.find((c) => c[0] === id) || [])[1];
+function hashSet() { const p = new URLSearchParams({ n: st.name, c: st.coat, e: st.eye }); try { history.replaceState(null, '', '#' + p.toString()); } catch (e) { /* egal */ } }
+function refreshUI() {
+  document.querySelectorAll('#coats button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.coat)));
+  document.querySelectorAll('#eyes button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.eye)));
+  $('coatname').textContent = coatLabel(st.coat); $('eyename').textContent = eyeLabel(st.eye) + ' eyes';
+}
+function build() {
+  COATS.forEach(([id, label, col]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.title = label; b.setAttribute('aria-label', label); b.style.background = col; b.addEventListener('click', () => { st.coat = id; refreshUI(); hashSet(); redraw(); }); $('coats').appendChild(b); });
+  EYES.forEach(([id, label, col]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.title = label; b.setAttribute('aria-label', label + ' eyes'); b.style.backgroundColor = col; b.addEventListener('click', () => { st.eye = id; refreshUI(); hashSet(); redraw(); }); $('eyes').appendChild(b); });
+  $('name').addEventListener('input', (e) => { st.name = e.target.value.toUpperCase().replace(/[^A-Z0-9 ÄÖÜß'!?.-]/g, '').slice(0, 12); if (e.target.value !== st.name) e.target.value = st.name; hashSet(); redraw(); });
+}
+function fromHash() {
+  const p = new URLSearchParams(location.hash.slice(1)); const n = (p.get('n') || '').toUpperCase().replace(/[^A-Z0-9 ÄÖÜß'!?.-]/g, '').slice(0, 12), c = p.get('c'), e = p.get('e');
+  if (n) st.name = n; if (COATS.some((x) => x[0] === c)) st.coat = c; if (EYES.some((x) => x[0] === e)) st.eye = e; $('name').value = st.name;
+}
+function cardBlob() { return new Promise((res) => $('card').toBlob(res, 'image/png')); }
+async function download() { const b = await cardBlob(); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = (st.name || 'cat').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-cat-card.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
+async function share() {
+  const b = await cardBlob(), f = new File([b], 'cat-card.png', { type: 'image/png' });
+  const data = { title: st.name + ' ✦ Chosen By Cats', text: 'I made my cat a character ✦', url: location.href.split('#')[0] + '#' + new URLSearchParams({ n: st.name, c: st.coat, e: st.eye }) };
+  try { if (navigator.canShare && navigator.canShare({ files: [f] })) await navigator.share({ ...data, files: [f] }); else await navigator.share(data); } catch (e) { /* abgebrochen */ }
+}
+function orderText() {
+  const prod = (document.querySelector('input[name=p]:checked') || {}).value || 'Mug (11 oz)';
+  const link = location.href.split('#')[0] + '#' + new URLSearchParams({ n: st.name, c: st.coat, e: st.eye });
+  return `Hi Chosen By Cats! I made my cat on the Cat Maker ✦\nName: ${st.name}\nFur: ${coatLabel(st.coat)}\nEyes: ${eyeLabel(st.eye)}\nI'd love it on: ${prod}\nMy cat: ${link}`;
+}
+async function send() {
+  const txt = orderText(); let ok = false;
+  try { await navigator.clipboard.writeText(txt); ok = true; } catch (e) { const ta = document.createElement('textarea'); ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { ok = document.execCommand('copy'); } catch (e2) { /* egal */ } ta.remove(); }
+  $('msg').textContent = ok ? 'Copied! Paste it in our DMs ✦' : 'Please copy this into our DMs: ' + txt.replace(/\n/g, ' | ');
+  setTimeout(() => { window.open('https://ig.me/m/whatif_simulated', '_blank', 'noopener'); }, 600);
+}
+async function init() {
+  build(); fromHash(); refreshUI();
+  try { await document.fonts.load(`900 40px ${FONT}`); await document.fonts.ready; } catch (e) { /* weiter */ }
+  drawTitle(); redraw();
+  $('dl').addEventListener('click', download); $('send').addEventListener('click', send);
+  if (navigator.share) { $('share').hidden = false; $('share').addEventListener('click', share); }
+  window.addEventListener('hashchange', () => { fromHash(); refreshUI(); redraw(); });
+}
+init();
+})();
+</script>
+</body>
+</html>
