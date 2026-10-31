@@ -62,6 +62,7 @@ footer a { color: var(--violet); font-weight: 800; }
 /* Einbett-Modus (?embed=1): Seite steckt als Rahmen im Shop; kein eigenes Logo, durchsichtiger Hintergrund */
 .only-embed { display: none; }
 html.embed, html.embed body { background: transparent; background-image: none; }
+html.embed, html.embed body { overflow: hidden; }
 html.embed header { display: none; }
 html.embed .wrap { padding-top: 0; }
 html.embed .only-embed { display: block; text-align: center; font-size: 13px; font-weight: 700; margin: 4px 0 0; }
@@ -91,6 +92,9 @@ html.embed .only-embed a { color: var(--violet); }
     <h3>Eyes</h3>
     <div id="eyes" class="sw eyes" role="group" aria-label="Eyes"></div>
     <div id="eyename" class="eyename"></div>
+    <h3>Collar</h3>
+    <div id="collars" class="sw" role="group" aria-label="Collar"></div>
+    <div id="collarname" class="coatname"></div>
     <div class="row" style="margin-top:16px">
       <button class="btn alt grow" id="dl" type="button">Download my card</button>
       <button class="btn grow" id="share" type="button" hidden>Share ✦</button>
@@ -135,8 +139,9 @@ const COATS = [
   ['tuxedo', 'Tuxedo', 'linear-gradient(90deg,#3d3d44 50%,#f6f4ef 50%)'], ['calico', 'Calico', 'conic-gradient(#f5a24a 0 33%,#f6f4ef 0 66%,#3d3d44 0)'],
 ];
 const EYES = [['green', 'Green', '#7ccf4a'], ['blue', 'Blue', '#5fb0e8'], ['amber', 'Amber', '#f2c230'], ['copper', 'Copper', '#d9822b']];
+const COLLARS = [['red', 'Red', '#d8343c'], ['pink', 'Pink', '#ff5db3'], ['aqua', 'Aqua', '#3fb6e8'], ['yellow', 'Yellow', '#f2c230'], ['violet', 'Violet', '#8f6bff'], ['black', 'Black', '#26262b']];
 const $ = (id) => document.getElementById(id);
-const st = { name: 'MANGO', coat: 'orange-tabby', eye: 'green' };
+const st = { name: 'MANGO', coat: 'orange-tabby', eye: 'green', collar: 'red' };
 
 /* ——— gleiche Zeichenhelfer wie bei den Shop-Motiven (Y2K-Stil) ——— */
 const canvas2d = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d')]; };
@@ -201,8 +206,8 @@ function drawTitle() {
   bubbleText(g, 'A CHARACTER ✦', W / 2, 295, 104, { maxW: W * 0.94, fill: ['#ffffff', '#7fe6ff', '#1fa8e8'] });
 }
 const sprites = {};
-function sprite(coat, eye, cb) {
-  const k = coat + '_' + eye; if (sprites[k]) { if (sprites[k].complete) cb(sprites[k]); else sprites[k].addEventListener('load', () => cb(sprites[k])); return; }
+function sprite(coat, eye, collar, cb) {
+  const k = coat + '_' + eye + '_' + collar; if (sprites[k]) { if (sprites[k].complete) cb(sprites[k]); else sprites[k].addEventListener('load', () => cb(sprites[k])); return; }
   const im = new Image(); im.decoding = 'async'; im.addEventListener('load', () => cb(im)); im.src = 'sprites/' + k + '.webp'; sprites[k] = im;
 }
 function drawCard(img) {
@@ -225,37 +230,40 @@ function drawCard(img) {
   g.restore();
 }
 let drawSeq = 0;
-function redraw() { const my = ++drawSeq; drawCard(null); sprite(st.coat, st.eye, (img) => { if (my === drawSeq) drawCard(img); }); }
+function redraw() { const my = ++drawSeq; drawCard(null); sprite(st.coat, st.eye, st.collar, (img) => { if (my === drawSeq) drawCard(img); }); }
 
 /* ——— Bedienung ——— */
 const coatLabel = (id) => (COATS.find((c) => c[0] === id) || [])[1];
 const eyeLabel = (id) => (EYES.find((c) => c[0] === id) || [])[1];
-function hashSet() { const p = new URLSearchParams({ n: st.name, c: st.coat, e: st.eye }); try { history.replaceState(null, '', '#' + p.toString()); } catch (e) { /* egal */ } const o = $('own'); if (o) o.href = 'https://sinan-digital.github.io/cat-maker/#' + p.toString(); }
+const collarLabel = (id) => (COLLARS.find((c) => c[0] === id) || [])[1];
+function hashSet() { const p = new URLSearchParams({ n: st.name, c: st.coat, e: st.eye, k: st.collar }); try { history.replaceState(null, '', '#' + p.toString()); } catch (e) { /* egal */ } const o = $('own'); if (o) o.href = 'https://sinan-digital.github.io/cat-maker/#' + p.toString(); }
 function refreshUI() {
   document.querySelectorAll('#coats button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.coat)));
   document.querySelectorAll('#eyes button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.eye)));
-  $('coatname').textContent = coatLabel(st.coat); $('eyename').textContent = eyeLabel(st.eye) + ' eyes';
+  document.querySelectorAll('#collars button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.collar)));
+  $('coatname').textContent = coatLabel(st.coat); $('eyename').textContent = eyeLabel(st.eye) + ' eyes'; $('collarname').textContent = collarLabel(st.collar) + ' collar';
 }
 function build() {
   COATS.forEach(([id, label, col]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.title = label; b.setAttribute('aria-label', label); b.style.background = col; b.addEventListener('click', () => { st.coat = id; refreshUI(); hashSet(); redraw(); }); $('coats').appendChild(b); });
   EYES.forEach(([id, label, col]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.title = label; b.setAttribute('aria-label', label + ' eyes'); b.style.backgroundColor = col; b.addEventListener('click', () => { st.eye = id; refreshUI(); hashSet(); redraw(); }); $('eyes').appendChild(b); });
+  COLLARS.forEach(([id, label, col]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.title = label; b.setAttribute('aria-label', label + ' collar'); b.style.backgroundColor = col; b.addEventListener('click', () => { st.collar = id; refreshUI(); hashSet(); redraw(); }); $('collars').appendChild(b); });
   $('name').addEventListener('input', (e) => { st.name = e.target.value.toUpperCase().replace(/[^A-Z0-9 ÄÖÜß'!?.-]/g, '').slice(0, 12); if (e.target.value !== st.name) e.target.value = st.name; hashSet(); redraw(); });
 }
 function fromHash() {
-  const p = new URLSearchParams(location.hash.slice(1)); const n = (p.get('n') || '').toUpperCase().replace(/[^A-Z0-9 ÄÖÜß'!?.-]/g, '').slice(0, 12), c = p.get('c'), e = p.get('e');
-  if (n) st.name = n; if (COATS.some((x) => x[0] === c)) st.coat = c; if (EYES.some((x) => x[0] === e)) st.eye = e; $('name').value = st.name;
+  const p = new URLSearchParams(location.hash.slice(1)); const n = (p.get('n') || '').toUpperCase().replace(/[^A-Z0-9 ÄÖÜß'!?.-]/g, '').slice(0, 12), c = p.get('c'), e = p.get('e'), k = p.get('k');
+  if (n) st.name = n; if (COATS.some((x) => x[0] === c)) st.coat = c; if (EYES.some((x) => x[0] === e)) st.eye = e; if (COLLARS.some((x) => x[0] === k)) st.collar = k; $('name').value = st.name;
 }
 function cardBlob() { return new Promise((res) => $('card').toBlob(res, 'image/png')); }
 async function download() { const b = await cardBlob(); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = (st.name || 'cat').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-cat-card.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
 async function share() {
   const b = await cardBlob(), f = new File([b], 'cat-card.png', { type: 'image/png' });
-  const data = { title: st.name + ' ✦ Chosen By Cats', text: 'I made my cat a character ✦', url: 'https://sinan-digital.github.io/cat-maker/#' + new URLSearchParams({ n: st.name, c: st.coat, e: st.eye }) };
+  const data = { title: st.name + ' ✦ Chosen By Cats', text: 'I made my cat a character ✦', url: 'https://sinan-digital.github.io/cat-maker/#' + new URLSearchParams({ n: st.name, c: st.coat, e: st.eye, k: st.collar }) };
   try { if (navigator.canShare && navigator.canShare({ files: [f] })) await navigator.share({ ...data, files: [f] }); else await navigator.share(data); } catch (e) { /* abgebrochen */ }
 }
 function orderText() {
   const prod = (document.querySelector('input[name=p]:checked') || {}).value || 'Mug (11 oz)';
-  const link = 'https://sinan-digital.github.io/cat-maker/#' + new URLSearchParams({ n: st.name, c: st.coat, e: st.eye });
-  return `Hi Chosen By Cats! I made my cat on the Cat Maker ✦\nName: ${st.name}\nFur: ${coatLabel(st.coat)}\nEyes: ${eyeLabel(st.eye)}\nI'd love it on: ${prod}\nMy cat: ${link}`;
+  const link = 'https://sinan-digital.github.io/cat-maker/#' + new URLSearchParams({ n: st.name, c: st.coat, e: st.eye, k: st.collar });
+  return `Hi Chosen By Cats! I made my cat on the Cat Maker ✦\nName: ${st.name}\nFur: ${coatLabel(st.coat)}\nEyes: ${eyeLabel(st.eye)}\nCollar: ${collarLabel(st.collar)}\nI'd love it on: ${prod}\nMy cat: ${link}`;
 }
 async function send() {
   const txt = orderText(); let ok = false;
