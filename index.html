@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cat Maker ✦ Chosen By Cats</title>
-<meta name="description" content="Make your cat a Y2K character in 10 seconds. Pick the fur, the eyes and the name, get your Cat Card for free and put it on a mug or tee.">
+<meta name="description" content="Make your cat a Y2K character in 10 seconds. Pick the fur, the eyes and the name, get your Cat Card for free and put it on a mug, tee or pillow.">
 <meta property="og:title" content="Make your cat a character ✦ Chosen By Cats">
 <meta property="og:description" content="Pick the fur, the eyes and the name. Get your own Y2K Cat Card for free.">
 <meta property="og:type" content="website">
@@ -47,12 +47,13 @@ input[type=text]:focus { border-color: var(--hot); box-shadow: 0 0 0 4px rgba(25
 .btn.alt { background: linear-gradient(#9fe9ff, #3fb6e8); box-shadow: 0 6px 0 #1f7fae, 0 14px 24px rgba(31,127,174,.3); text-shadow: 0 2px 0 rgba(10,70,110,.35); }
 .btn.big { width: 100%; font-size: 20px; padding: 17px 22px; }
 .grow { flex: 1 1 150px; }
-.prod { display: grid; gap: 10px; }
-.prod label { display: flex; align-items: center; gap: 12px; background: #fff; border: 3px solid var(--lilac); border-radius: 18px; padding: 11px 14px; cursor: pointer; font-weight: 800; }
-.prod input { accent-color: var(--hot); width: 22px; height: 22px; margin: 0; }
+.prod { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.prod label { position: relative; display: flex; flex-direction: column; gap: 1px; background: #fff; border: 3px solid var(--lilac); border-radius: 18px; padding: 10px 12px; cursor: pointer; font-weight: 800; line-height: 1.25; }
+.prod label:has(input:focus-visible) { outline: 3px solid var(--violet); outline-offset: 2px; }
+.prod input { position: absolute; opacity: 0; pointer-events: none; }
 .prod label:has(input:checked) { border-color: var(--hot); box-shadow: 0 0 0 4px rgba(255,61,154,.2); }
 .prod small { display: block; font-weight: 600; opacity: .75; }
-.prod .price { margin-left: auto; font-weight: 900; color: var(--violet); white-space: nowrap; }
+.prod .price { margin-top: 4px; font-weight: 900; color: var(--violet); white-space: nowrap; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chips button { font: inherit; font-weight: 900; font-size: 15px; min-width: 52px; padding: 9px 14px; border-radius: 999px; border: 3px solid var(--lilac); background: #fff; color: var(--ink); cursor: pointer; }
 .chips button[aria-pressed=true] { border-color: var(--hot); box-shadow: 0 0 0 4px rgba(255,61,154,.2); }
@@ -62,6 +63,17 @@ input[type=text]:focus { border-color: var(--hot); box-shadow: 0 0 0 4px rgba(25
 #printPrev.tall { max-width: 340px; }
 .bar { height: 12px; border-radius: 999px; background: rgba(255,255,255,.7); border: 2px solid #fff; overflow: hidden; margin: 14px 4px 0; }
 .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--pink), var(--violet)); transition: width .3s; }
+.loader { text-align: center; margin: 16px 0 2px; }
+.paws { display: flex; justify-content: center; gap: 12px; height: 34px; }
+.paws svg { width: 30px; height: 30px; fill: var(--violet); opacity: 0; animation: pawwalk 1.5s ease-in-out infinite; }
+.paws svg:nth-child(2) { animation-delay: .22s; } .paws svg:nth-child(3) { animation-delay: .44s; } .paws svg:nth-child(4) { animation-delay: .66s; }
+@keyframes pawwalk { 0%, 12% { opacity: 0; transform: translateY(8px) scale(.7); } 35%, 62% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-6px) scale(.92); } }
+.loader p { font-weight: 900; color: var(--violet); margin: 6px 0 0; min-height: 24px; }
+.bar i.go { transition: width 11s cubic-bezier(.15,.6,.3,1); }
+.center { text-align: center; }
+.pulse { animation: pulse 1s ease-in-out infinite; } @keyframes pulse { 50% { transform: scale(1.04); } }
+.pop { animation: pop .4s ease-out; } @keyframes pop { 40% { transform: scale(1.04) rotate(-1deg); } }
+@media (prefers-reduced-motion: reduce) { .paws svg, .pulse, .pop { animation: none; opacity: 1; } .bar i.go { transition: none; } }
 .linkbtn { appearance: none; background: none; border: 0; padding: 0; font: inherit; font-weight: 800; color: var(--violet); text-decoration: underline; cursor: pointer; }
 #orderDone { text-align: center; }
 #orderDone img { display: block; width: 100%; max-width: 340px; max-height: 340px; object-fit: contain; margin: 12px auto; border-radius: 18px; border: 3px solid #fff; box-shadow: 0 8px 18px rgba(60,20,120,.25); background: #fff; }
@@ -86,6 +98,7 @@ html.embed .only-embed a { color: var(--violet); }
 <script>if (/[?&]embed=1/.test(location.search)) document.documentElement.classList.add('embed');</script>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="paw" viewBox="0 0 64 64"><ellipse cx="32" cy="43" rx="15" ry="12"/><ellipse cx="14" cy="27" rx="6.5" ry="9" transform="rotate(-18 14 27)"/><ellipse cx="26" cy="16" rx="6.5" ry="9"/><ellipse cx="38" cy="16" rx="6.5" ry="9"/><ellipse cx="50" cy="27" rx="6.5" ry="9" transform="rotate(18 50 27)"/></symbol></svg>
 <div class="wrap">
   <header>
     <img src="logo.png" alt="Chosen By Cats" width="152" height="58">
@@ -110,28 +123,33 @@ html.embed .only-embed a { color: var(--violet); }
     <h3>Collar</h3>
     <div id="collars" class="sw" role="group" aria-label="Collar"></div>
     <div id="collarname" class="coatname"></div>
-    <div class="row" style="margin-top:16px">
-      <button class="btn alt grow" id="dl" type="button">Download my card</button>
-      <button class="btn grow" id="share" type="button" hidden>Share ✦</button>
+    <h3>Backdrop</h3>
+    <div id="bgs" class="sw" role="group" aria-label="Backdrop"></div>
+    <div id="bgname" class="coatname"></div>
+    <button class="btn big" id="surprise" type="button" style="margin-top:18px">Surprise me ✦</button>
+    <div class="row" style="margin-top:12px">
+      <button class="btn alt grow" id="dl" type="button">Download card</button>
+      <button class="btn alt grow" id="share" type="button">Share ✦</button>
     </div>
+    <div class="msg center" id="shareMsg" role="status" aria-live="polite" style="min-height:0"></div>
   </section>
 
   <section class="panel" id="order" aria-label="Put your cat on something">
-    <h2>Put your cat on something ✦</h2>
-    <p class="note" id="orderIntro" style="margin-top:0">Your name, your fur, your eyes, printed on demand. Choose what you'd love:</p>
+    <h2 id="orderTitle">Put your cat on it ✦</h2>
     <div class="prod" id="prod">
-      <label><input type="radio" name="p" value="mug11" checked><span>Mug 11 oz<small>pink or blue inside</small></span><span class="price">$24</span></label>
-      <label><input type="radio" name="p" value="mug15"><span>Mug 15 oz<small>pink or blue inside</small></span><span class="price">$27</span></label>
-      <label><input type="radio" name="p" value="tee"><span>Tee<small>soft unisex cotton, XS to 2XL</small></span><span class="price">$29</span></label>
+      <label><input type="radio" name="p" value="mug11" checked><span>Mug 11 oz</span><small>pink or blue inside</small><span class="price">$24</span></label>
+      <label><input type="radio" name="p" value="mug15"><span>Mug 15 oz</span><small>pink or blue inside</small><span class="price">$27</span></label>
+      <label><input type="radio" name="p" value="tee"><span>Tee</span><small>soft cotton, XS to 2XL</small><span class="price">$29</span></label>
+      <label><input type="radio" name="p" value="pillow"><span>Pillow</span><small>soft, 18 × 18 in</small><span class="price">$34</span></label>
     </div>
     <div class="auto-only" id="opts">
+      <canvas id="printPrev" width="1000" height="840" role="img" aria-label="Preview of your product with your cat"></canvas>
+      <p class="note center" style="margin:0 0 4px">Preview</p>
       <h3>Style</h3>
       <div id="styles" class="chips" role="group" aria-label="Style"><button type="button" data-s="sparkle">Sparkle ✦</button><button type="button" data-s="clean">Clean</button></div>
-      <canvas id="printPrev" width="1000" height="840" role="img" aria-label="Preview of your product with your cat"></canvas>
-      <p class="note" style="text-align:center;margin:0 0 4px">Your preview ✦ the real product photo comes after you tap Order now.</p>
-      <h3 id="optColorTitle">Inside color</h3>
+      <div id="optColorBox"><h3 id="optColorTitle">Inside color</h3>
       <div id="optColors" class="sw opt" role="group" aria-label="Color"></div>
-      <div id="optColorName" class="coatname"></div>
+      <div id="optColorName" class="coatname"></div></div>
       <div id="optSizeBox" hidden><h3>Size</h3><div id="optSizes" class="chips" role="group" aria-label="Size"></div></div>
     </div>
     <div id="orderForm">
@@ -143,29 +161,34 @@ html.embed .only-embed a { color: var(--violet); }
           <li>You order. It's made for you and ships worldwide in about 5 to 11 days.</li>
         </ol>
         <button class="btn big" id="send" type="button">Send my cat ✦</button>
+        <p class="note">No Instagram? Use the <a href="https://whatif-simulated-shop.fourthwall.com/contact" style="color:var(--violet);font-weight:800">shop contact form</a>. Code <b>CHOSEN10</b> = 10% off.</p>
       </div>
       <div class="auto-only">
-        <button class="btn big" id="buy" type="button">Order now ✦</button>
-        <div class="bar" id="bar" hidden><i></i></div>
+        <button class="btn big" id="buy" type="button" style="margin-top:16px">Order now ✦</button>
+        <div class="loader" id="loader" hidden role="status" aria-live="polite">
+          <div class="paws" aria-hidden="true"><svg><use href="#paw"/></svg><svg><use href="#paw"/></svg><svg><use href="#paw"/></svg><svg><use href="#paw"/></svg></div>
+          <p id="loaderTxt">Making your print file …</p>
+          <div class="bar"><i id="barI"></i></div>
+        </div>
+        <p class="note center">Ships worldwide in 5–11 days ✦ Secure checkout ✦ <b>10% off</b> applied for you</p>
+        <p class="note center" id="dmAlt" hidden>Trouble ordering? <button class="linkbtn" id="viaDm" type="button">Send my cat by DM instead</button></p>
       </div>
       <div class="msg" id="msg" role="status" aria-live="polite"></div>
-      <p class="note auto-only" style="text-align:center">Secure checkout by Fourthwall ✦ ships worldwide in about 5 to 11 days ✦ lovely as a gift: at checkout you can send it straight to someone else.</p>
-      <p class="note auto-only" style="text-align:center">Printed on demand just for you, so please double-check the name. Prefer Instagram? <button class="linkbtn" id="viaDm" type="button">Send my cat by DM instead</button></p>
-      <p class="note">No Instagram? Use the <a href="https://whatif-simulated-shop.fourthwall.com/contact" style="color:var(--violet);font-weight:800">shop contact form</a> and paste your details there. Prices are before shipping and tax. Code <b>CHOSEN10</b> = 10% off.</p>
     </div>
     <div id="orderDone" hidden>
       <h2>Your cat is ready ✦</h2>
       <img id="doneImg" alt="Your product" width="340" height="340">
       <p class="lead" id="doneTxt" style="margin-bottom:12px"></p>
-      <a class="btn big" id="doneGo" href="#" target="_blank" rel="noopener">Go to checkout ✦</a>
-      <p class="note">Shipping and tax are shown at checkout. Code <b>CHOSEN10</b> = 10% off. This product was made just for you and is private to your link.</p>
-      <p class="note"><button class="linkbtn" id="doneBack" type="button">Change something</button></p>
+      <a class="btn big" id="doneGo" href="#">Go to checkout ✦</a>
+      <p class="note center" id="doneWait">Taking you to checkout …</p>
+      <p class="note center">Shipping and tax at checkout ✦ <b>10% off</b> already applied</p>
+      <p class="note center"><button class="linkbtn" id="doneBack" type="button">Change something</button></p>
     </div>
   </section>
 
   <footer>
     <p>Made by the cats at <a href="https://whatif-simulated-shop.fourthwall.com/">Chosen By Cats</a> ✦ TikTok <a href="https://www.tiktok.com/@whatif.simulated">@whatif.simulated</a> ✦ Instagram <a href="https://www.instagram.com/whatif_simulated/">@whatif_simulated</a></p>
-    <p>This page stores nothing about you; your cat lives in the link. If you order, your cat's name and look are sent to our print partner Fourthwall (through a small order helper at Cloudflare) so your product can be made. It is hosted on GitHub Pages, which may log your IP address.
+    <p>Your cat lives in the link; we store nothing about you. If you order, its name and design go to our print partner Fourthwall (via a small Cloudflare helper). Hosted on GitHub Pages, which may log your IP address.
     <a href="https://sharin-media.de/impressum/">Imprint</a> ✦ <a href="https://sharin-media.de/datenschutz/">Privacy</a></p>
   </footer>
 </div>
@@ -184,7 +207,15 @@ const COATS = [
 const EYES = [['green', 'Green', '#7ccf4a'], ['blue', 'Blue', '#5fb0e8'], ['amber', 'Amber', '#f2c230'], ['copper', 'Copper', '#d9822b']];
 const COLLARS = [['red', 'Red', '#d8343c'], ['pink', 'Pink', '#ff5db3'], ['aqua', 'Aqua', '#3fb6e8'], ['yellow', 'Yellow', '#f2c230'], ['violet', 'Violet', '#8f6bff'], ['black', 'Black', '#26262b']];
 const $ = (id) => document.getElementById(id);
-const st = { name: 'MANGO', coat: 'orange-tabby', eye: 'green', collar: 'red', style: 'sparkle' };   // style: sparkle (Y2K, bunt) | clean (schlicht, für alle)
+const st = { name: 'MANGO', coat: 'orange-tabby', eye: 'green', collar: 'red', style: 'sparkle', bg: 'sky' };   // style: sparkle (Y2K, bunt) | clean (schlicht, für alle)
+// Hintergrundfarben für Karte, Tasse und Kissen: [id, Name, [oben, Mitte, unten], Herzfarbe auf dem Shirt, Kreisfarbe im Clean-Stil]
+const BGS = [
+  ['sky', 'Sky', ['#8fd3ff', '#c9b8ff', '#ffc2e6'], 'pink', '#d3e4ec'], ['sunset', 'Sunset', ['#ffd6a5', '#ff9fb8', '#c9a0ff'], 'pink', '#f6dcc9'],
+  ['mint', 'Mint', ['#b9f2d8', '#9fd8ff', '#d6c4ff'], 'blue', '#d6efe0'], ['lilac', 'Lilac', ['#e3c9ff', '#c4b2ff', '#ffc2e6'], 'pink', '#e6dcf3'],
+  ['night', 'Night', ['#1b1554', '#4b2d8f', '#ff7ac8'], 'blue', '#cfd3ea'],
+];
+const bgNow = () => BGS.find((b) => b[0] === st.bg) || BGS[0];
+const bgCols = () => { const [top, mid, bot] = bgNow()[2]; return { top, mid, bot }; };
 
 /* ——— gleiche Zeichenhelfer wie bei den Shop-Motiven (Y2K-Stil) ——— */
 const canvas2d = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d')]; };
@@ -260,7 +291,7 @@ function drawCard(img) {
   const holo = g.createLinearGradient(0, 0, W, H); ['#ff9ad5', '#ffe58a', '#9dffd9', '#8fd3ff', '#c4b2ff', '#ff9ad5'].forEach((col, i, a) => holo.addColorStop(i / (a.length - 1), col)); g.fillStyle = holo; g.fillRect(0, 0, W, H);
   const inner = W * 0.045; g.beginPath(); g.roundRect(inner, inner, W - 2 * inner, H - 2 * inner, rr * 0.7); g.fillStyle = '#fff7fc'; g.fill();
   const wx = W * 0.09, wy = H * 0.12, ww = W * 0.82, wh = H * 0.5;
-  g.save(); g.beginPath(); g.roundRect(wx, wy, ww, wh, ww * 0.12); g.clip(); y2kBackdrop(g, W, H, { seed: 61, stars: 22, hearts: 4, butterflies: 2 });
+  g.save(); g.beginPath(); g.roundRect(wx, wy, ww, wh, ww * 0.12); g.clip(); y2kBackdrop(g, W, H, { seed: 61, stars: 22, hearts: 4, butterflies: 2, ...bgCols() });
   if (img) g.drawImage(img, wx, wy + wh * 0.05, ww, wh * 0.95); g.restore();
   g.lineWidth = W * 0.012; g.strokeStyle = Y.violet; g.beginPath(); g.roundRect(wx, wy, ww, wh, ww * 0.12); g.stroke();
   g.fillStyle = Y.ink; g.textAlign = 'left'; let fs = H * 0.052; g.font = `900 ${fs}px ${FONT}`; const mw = g.measureText(name).width; if (mw > W * 0.5) { fs *= W * 0.5 / mw; g.font = `900 ${fs}px ${FONT}`; }
@@ -270,7 +301,7 @@ function drawCard(img) {
   const stats = [['CUTENESS', 100], ['ZOOMIES', 60 + h % 40], ['SLOW BLINK', 80 + h % 20], ['NAP LEVEL', 70 + (h >> 2) % 30]];
   stats.forEach(([n, v], i) => { const y = H * 0.67 + i * H * 0.062; g.textAlign = 'left'; g.font = `800 ${H * 0.0245}px ${FONT}`; g.fillStyle = Y.ink; g.fillText(n, W * 0.09, y + H * 0.018); g.fillStyle = 'rgba(106,76,255,0.18)'; g.beginPath(); g.roundRect(W * 0.38, y, W * 0.4, H * 0.026, H * 0.013); g.fill(); const bg = g.createLinearGradient(W * 0.38, 0, W * 0.78, 0); bg.addColorStop(0, '#ff7ac8'); bg.addColorStop(1, '#8f6bff'); g.fillStyle = bg; g.beginPath(); g.roundRect(W * 0.38, y, W * 0.4 * v / 100, H * 0.026, H * 0.013); g.fill(); g.textAlign = 'right'; g.fillStyle = Y.ink; g.fillText(String(v), W * 0.91, y + H * 0.02); });
   g.textAlign = 'center'; g.fillStyle = Y.violet; g.font = `800 ${H * 0.031}px ${FONT}`; g.fillText('OFFICIALLY CHOSEN ✦ NO. ' + String(100 + h % 900), W / 2, H * 0.94);
-  g.restore();
+  g.restore(); if (img) prepShare();
 }
 let drawSeq = 0;
 function redraw() { const my = ++drawSeq; drawCard(null); sprite(st.coat, st.eye, st.collar, (img) => { if (my === drawSeq) drawCard(img); }); schedulePreview(); }
@@ -279,33 +310,51 @@ function redraw() { const my = ++drawSeq; drawCard(null); sprite(st.coat, st.eye
 const coatLabel = (id) => (COATS.find((c) => c[0] === id) || [])[1];
 const eyeLabel = (id) => (EYES.find((c) => c[0] === id) || [])[1];
 const collarLabel = (id) => (COLLARS.find((c) => c[0] === id) || [])[1];
-function hashSet() { const p = new URLSearchParams({ n: st.name, c: st.coat, e: st.eye, k: st.collar }); if (st.style === 'clean') p.set('s', 'clean'); if (curKey() !== 'mug11') p.set('p', curKey()); try { history.replaceState(null, '', '#' + p.toString()); } catch (e) { /* egal */ } const o = $('own'); if (o) o.href = 'https://sinan-digital.github.io/cat-maker/#' + p.toString(); }
+function hashString() { const p = new URLSearchParams({ n: st.name, c: st.coat, e: st.eye, k: st.collar }); if (st.style === 'clean') p.set('s', 'clean'); if (st.bg !== 'sky') p.set('b', st.bg); if (curKey() !== 'mug11') p.set('p', curKey()); return p.toString(); }
+const pageUrl = () => 'https://sinan-digital.github.io/cat-maker/#' + hashString();
+function hashSet() { try { history.replaceState(null, '', '#' + hashString()); } catch (e) { /* egal */ } const o = $('own'); if (o) o.href = pageUrl(); }
 function refreshUI() {
   document.querySelectorAll('#coats button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.coat)));
   document.querySelectorAll('#eyes button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.eye)));
   document.querySelectorAll('#collars button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.collar)));
   $('coatname').textContent = coatLabel(st.coat); $('eyename').textContent = eyeLabel(st.eye) + ' eyes'; $('collarname').textContent = collarLabel(st.collar) + ' collar';
+  document.querySelectorAll('#bgs button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.bg))); $('bgname').textContent = bgNow()[1] + ' backdrop';
 }
 function build() {
   COATS.forEach(([id, label, col]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.title = label; b.setAttribute('aria-label', label); b.style.background = col; b.addEventListener('click', () => { st.coat = id; refreshUI(); hashSet(); redraw(); }); $('coats').appendChild(b); });
   EYES.forEach(([id, label, col]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.title = label; b.setAttribute('aria-label', label + ' eyes'); b.style.backgroundColor = col; b.addEventListener('click', () => { st.eye = id; refreshUI(); hashSet(); redraw(); }); $('eyes').appendChild(b); });
   COLLARS.forEach(([id, label, col]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.title = label; b.setAttribute('aria-label', label + ' collar'); b.style.backgroundColor = col; b.addEventListener('click', () => { st.collar = id; refreshUI(); hashSet(); redraw(); }); $('collars').appendChild(b); });
+  BGS.forEach(([id, label, cols]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.title = label; b.setAttribute('aria-label', label + ' backdrop'); b.style.background = `linear-gradient(135deg, ${cols[0]}, ${cols[1]}, ${cols[2]})`; b.addEventListener('click', () => { st.bg = id; refreshUI(); hashSet(); redraw(); }); $('bgs').appendChild(b); });
   $('name').addEventListener('input', (e) => { st.name = e.target.value.toUpperCase().replace(/[^A-Z0-9 ÄÖÜß'!?.-]/g, '').slice(0, 12); if (e.target.value !== st.name) e.target.value = st.name; hashSet(); redraw(); });
 }
 function fromHash() {
   const p = new URLSearchParams(location.hash.slice(1)); const n = (p.get('n') || '').toUpperCase().replace(/[^A-Z0-9 ÄÖÜß'!?.-]/g, '').slice(0, 12), c = p.get('c'), e = p.get('e'), k = p.get('k');
-  if (n) st.name = n; if (COATS.some((x) => x[0] === c)) st.coat = c; if (EYES.some((x) => x[0] === e)) st.eye = e; if (COLLARS.some((x) => x[0] === k)) st.collar = k; st.style = p.get('s') === 'clean' ? 'clean' : 'sparkle'; const pk = p.get('p'), pr = ['mug11', 'mug15', 'tee'].includes(pk) && document.querySelector(`input[name=p][value=${pk}]`); if (pr) pr.checked = true; $('name').value = st.name;   // p = Produkt vorauswählen (mug11, mug15, tee)
+  if (n) st.name = n; if (COATS.some((x) => x[0] === c)) st.coat = c; if (EYES.some((x) => x[0] === e)) st.eye = e; if (COLLARS.some((x) => x[0] === k)) st.collar = k; st.style = p.get('s') === 'clean' ? 'clean' : 'sparkle'; const bb = p.get('b'); st.bg = BGS.some((x) => x[0] === bb) ? bb : 'sky'; const pk = p.get('p'), pr = ['mug11', 'mug15', 'tee', 'pillow'].includes(pk) && document.querySelector(`input[name=p][value=${pk}]`); if (pr) pr.checked = true; $('name').value = st.name;   // p = Produkt vorauswählen (mug11, mug15, tee)
 }
 function cardBlob() { return new Promise((res) => $('card').toBlob(res, 'image/png')); }
 async function download() { const b = await cardBlob(); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = (st.name || 'cat').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-cat-card.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
+let shareFile = null, shareTimer = 0;
+function prepShare() { clearTimeout(shareTimer); shareFile = null; shareTimer = setTimeout(async () => { const b = await cardBlob(); if (b) shareFile = new File([b], (st.name || 'cat').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-cat-card.png', { type: 'image/png' }); }, 600); }   // schon vorher bereitlegen, damit das Teilen sofort nach dem Tippen startet
+async function copyText(txt) {
+  try { await navigator.clipboard.writeText(txt); return true; } catch (e) { const ta = document.createElement('textarea'); ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e2) { /* egal */ } ta.remove(); return ok; }
+}
+function toast(t) { const m = $('shareMsg'); m.textContent = t; m.style.minHeight = '22px'; clearTimeout(toast.t); toast.t = setTimeout(() => { m.textContent = ''; m.style.minHeight = '0'; }, 6000); }
 async function share() {
-  const b = await cardBlob(), f = new File([b], 'cat-card.png', { type: 'image/png' });
-  const data = { title: st.name + ' ✦ Chosen By Cats', text: 'I made my cat a character ✦', url: 'https://sinan-digital.github.io/cat-maker/#' + new URLSearchParams({ n: st.name, c: st.coat, e: st.eye, k: st.collar }) };
-  try { if (navigator.canShare && navigator.canShare({ files: [f] })) await navigator.share({ ...data, files: [f] }); else await navigator.share(data); } catch (e) { /* abgebrochen */ }
+  const data = { title: st.name + ' ✦ Chosen By Cats', text: 'I made my cat a character ✦', url: pageUrl() };
+  if (navigator.share) {
+    try { if (shareFile && navigator.canShare && navigator.canShare({ files: [shareFile] })) { await navigator.share({ ...data, files: [shareFile] }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+    try { await navigator.share(data); return; } catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  const ok = await copyText(data.url); toast(ok ? 'Link copied ✦ paste it anywhere to share your cat' : 'Copy this link to share: ' + data.url);   // Teilen-Fenster nicht möglich (z. B. im Shop-Rahmen): Link kopieren
+}
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+function surprise() {
+  st.coat = pick(COATS)[0]; st.eye = pick(EYES)[0]; st.collar = pick(COLLARS)[0]; st.bg = pick(BGS)[0]; refreshUI(); hashSet(); redraw();
+  const c = $('card'); c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); setTimeout(() => c.classList.remove('pop'), 500);
 }
 function orderText() {
   const prod = prodText();
-  const link = 'https://sinan-digital.github.io/cat-maker/#' + new URLSearchParams({ n: st.name, c: st.coat, e: st.eye, k: st.collar });
+  const link = pageUrl();
   return `Hi Chosen By Cats! I made my cat on the Cat Maker ✦\nName: ${st.name}\nFur: ${coatLabel(st.coat)}\nEyes: ${eyeLabel(st.eye)}\nCollar: ${collarLabel(st.collar)}\nI'd love it on: ${prod}\nMy cat: ${link}`;
 }
 async function send() {
@@ -320,21 +369,22 @@ const API = (() => { const o = new URLSearchParams(location.search).get('api'); 
 // Maße = Druckfläche der Fourthwall-Vorlagen (Tasse: Rundum 9 x 3,5 in bei 300 dpi; Shirt: Front groß 15 x 18 in bei 150 dpi); der Worker meldet sie bei Änderung live über /config
 const MUGCOL = [['Pink', '#f6a1b1'], ['Blue', '#1e9fcd']];
 const PRODUCTS = {
-  mug11: { label: 'Mug 11 oz', kind: 'head', w: 2700, h: 1050, price: 24, size: '11oz', colors: MUGCOL, colorTitle: 'Inside color' },
-  mug15: { label: 'Mug 15 oz', kind: 'head', w: 2700, h: 1050, price: 27, size: '15oz', colors: MUGCOL, colorTitle: 'Inside color' },
-  tee: { label: 'Tee', kind: 'tee', w: 2250, h: 2700, fill: 1, crop: 0.92, price: 29, colors: [['Black', '#151515'], ['White', '#f4f4f4'], ['Pink', '#e3b1c4'], ['Navy', '#2f2e3e'], ['Natural', '#fef1d1']], sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], colorTitle: 'Shirt color' },
+  mug11: { label: 'Mug 11 oz', noun: 'mug', kind: 'head', w: 2700, h: 1050, price: 24, size: '11oz', colors: MUGCOL, colorTitle: 'Inside color' },
+  mug15: { label: 'Mug 15 oz', noun: 'mug', kind: 'head', w: 2700, h: 1050, price: 27, size: '15oz', colors: MUGCOL, colorTitle: 'Inside color' },
+  pillow: { label: 'Pillow', noun: 'pillow', kind: 'pillow', sprite: 'tee', w: 2850, h: 2850, keepSize: true, price: 34, size: '18" x 18"', colors: [['All-Over Print', '#fefefe']], colorTitle: '' },
+  tee: { label: 'Tee', noun: 'shirt', kind: 'tee', w: 2250, h: 2700, fill: 1, crop: 0.92, price: 29, colors: [['Black', '#151515'], ['White', '#f4f4f4'], ['Pink', '#e3b1c4'], ['Navy', '#2f2e3e'], ['Natural', '#fef1d1']], sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], colorTitle: 'Shirt color' },
 };
-const opt = { mug11: { color: 'Pink' }, mug15: { color: 'Pink' }, tee: { color: 'Black', size: 'M' } };
+const opt = { mug11: { color: 'Pink' }, mug15: { color: 'Pink' }, tee: { color: 'Black', size: 'M' }, pillow: { color: 'All-Over Print' } };
 const curKey = () => (document.querySelector('input[name=p]:checked') || {}).value || 'mug11';
 const nameNow = () => (st.name || 'YOUR CAT').trim() || 'YOUR CAT';
 const inStock = (k, color, size) => { const s = PRODUCTS[k].stock; if (!s) return true; const c = s[color]; return !!c && (size ? c[size] !== false : Object.values(c).some(Boolean)); };
-function prodText() { const k = curKey(), P = PRODUCTS[k], o = opt[k]; return API ? `${P.label} (${o.color}${P.sizes ? ', size ' + o.size : ' inside'})` : P.label; }
+function prodText() { const k = curKey(), P = PRODUCTS[k], o = opt[k]; return API && P.colors.length > 1 ? `${P.label} (${o.color}${P.sizes ? ', size ' + o.size : ' inside'})` : P.label; }
 
 // Tasse: Rundum-Druck 2700 x 1050. Der Henkel sitzt an der Naht (links und rechts im Bild), man sieht immer nur eine Hälfte:
 // darum steht dieselbe Anordnung (Katze im Kreis, Name, „Officially Chosen“) in der linken und in der rechten Hälfte (geprüft an den Fourthwall-Fotos vom 1.11.)
 function mugBlock(g, cx, W, H, head, name) {
   const d = H * 0.54, cy = H * 0.34, tw = W * 0.33;
-  const gr = g.createLinearGradient(0, cy - d / 2, 0, cy + d / 2); gr.addColorStop(0, '#8fd3ff'); gr.addColorStop(0.55, '#c9b8ff'); gr.addColorStop(1, '#ffb3dc');
+  const gr = g.createLinearGradient(0, cy - d / 2, 0, cy + d / 2); const [c0, c1, c2] = bgNow()[2]; gr.addColorStop(0, c0); gr.addColorStop(0.55, c1); gr.addColorStop(1, c2);
   g.fillStyle = gr; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.fill();
   if (head) { g.save(); g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.clip(); g.drawImage(head, cx - d * 0.55, cy - d * 0.52, d * 1.1, d * 1.1); g.restore(); }
   g.lineWidth = d * 0.04; g.strokeStyle = '#fff'; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.stroke(); g.lineWidth = d * 0.014; g.strokeStyle = Y.violet; g.beginPath(); g.arc(cx, cy, d / 2 + d * 0.022, 0, 6.3); g.stroke();
@@ -358,14 +408,14 @@ function mugArt(g, W, H, head, name) {
     const R = rng(71); g.fillStyle = 'rgba(31,34,51,0.07)'; for (let i = 0; i < 26; i++) pawPrint(g, R() * W, R() * H, (0.035 + R() * 0.035) * H, (R() - 0.5) * 1.4);
     for (const cx of [W * 0.28, W * 0.72]) {
       const d = H * 0.56, cy = H * 0.34;
-      g.fillStyle = CLEAN.sky; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.fill();
+      g.fillStyle = bgNow()[4]; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.fill();
       if (head) { g.save(); g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.clip(); g.drawImage(head, cx - d * 0.55, cy - d * 0.52, d * 1.1, d * 1.1); g.restore(); }
       g.lineWidth = d * 0.05; g.strokeStyle = CLEAN.ink; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.stroke();
       flatText(g, name, cx, H * 0.8, H * 0.2, { maxW: W * 0.33 }); flatText(g, 'OFFICIALLY CHOSEN ✦', cx, H * 0.92, H * 0.065, { maxW: W * 0.33, spacing: 0.12 });
     }
     return;
   }
-  y2kBackdrop(g, W, H, { seed: 71, stars: 40, hearts: 8, butterflies: 4 });
+  y2kBackdrop(g, W, H, { seed: 71, stars: 40, hearts: 8, butterflies: 4, ...bgCols() });
   mugBlock(g, W * 0.28, W, H, head, name); mugBlock(g, W * 0.72, W, H, head, name);
 }
 function teeArtClean(g, body, name) {   // Abzeichen mit Katze + Namensschild, funktioniert auf jeder Shirtfarbe
@@ -380,7 +430,7 @@ function teeArtClean(g, body, name) {   // Abzeichen mit Katze + Namensschild, f
 const TW = 3600, TH = 4200;
 function teeArt(g, body, name) {
   if (st.style === 'clean') return teeArtClean(g, body, name);
-  chromeHeart(g, TW * 0.5, TH * 0.34, TW * 0.5, 0.0, 'pink');
+  chromeHeart(g, TW * 0.5, TH * 0.34, TW * 0.5, 0.0, bgNow()[3]);
   if (body) g.drawImage(body, TW * 0.0875, TH * 0.013, TW * 0.825, TH * 0.625);   // Katze größer als in y2kCatTee: sie ist die Hauptfigur
   const R = rng(4); for (let i = 0; i < 9; i++) star4(g, TW * (0.1 + R() * 0.8), TH * (0.04 + R() * 0.5), TW * (0.02 + R() * 0.035), i % 3 ? '#ffffff' : Y.butter, 0, 1);
   chromeHeart(g, TW * 0.14, TH * 0.5, TW * 0.07, -0.4, 'blue'); chromeHeart(g, TW * 0.87, TH * 0.19, TW * 0.06, 0.4, 'blue'); butterfly(g, TW * 0.9, TH * 0.45, TW * 0.07, 0.5); butterfly(g, TW * 0.1, TH * 0.12, TW * 0.06, -0.5);
@@ -395,9 +445,17 @@ function teePrint(g, W, H, body, name, fill = 1) {
   const ux = x0 / q, uy = y0 / q, cw = (x1 - x0 + 1) / q, ch = (y1 - y0 + 1) / q, pad = 0.02, s = Math.min(W * (1 - 2 * pad) / cw, H * (1 - 2 * pad) / ch) * fill;
   g.save(); g.translate((W - cw * s) / 2 - ux * s, H * (pad + 0.01) - uy * s); g.scale(s, s); teeArt(g, body, name); g.restore();
 }
+function pillowArt(g, W, H, body, name) {   // Kissen 5700 x 5700 (hier halbe Auflösung): Hintergrund + dasselbe Motiv wie auf dem Shirt
+  if (st.style === 'clean') {
+    const soft = bgNow()[4], bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, soft); bg.addColorStop(1, mix(soft, '#8a8fa8', 0.25)); g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    const R = rng(83); g.fillStyle = 'rgba(31,34,51,0.08)'; for (let i = 0; i < 34; i++) pawPrint(g, R() * W, R() * H, (0.03 + R() * 0.03) * H, (R() - 0.5) * 1.4);
+  } else y2kBackdrop(g, W, H, { seed: 83, stars: 46, hearts: 9, butterflies: 5, ...bgCols() });
+  const aw = Math.round(W * 0.8), ah = Math.round(H * 0.92), [ac, ag] = canvas2d(aw, ah); teePrint(ag, aw, ah, body, name, 1);
+  g.drawImage(ac, (W - aw) / 2, (H - ah) / 2, aw, ah);
+}
 function paintPrint(g, key, k, img) {
   const P = PRODUCTS[key]; g.save(); g.imageSmoothingQuality = 'high';
-  if (P.kind === 'head') { g.scale(k, k); mugArt(g, P.w, P.h, img, nameNow()); } else teePrint(g, P.w * k, P.h * k, img, nameNow(), P.fill);
+  if (P.kind === 'head') { g.scale(k, k); mugArt(g, P.w, P.h, img, nameNow()); } else if (P.kind === 'pillow') { g.scale(k, k); pillowArt(g, P.w, P.h, img, nameNow()); } else teePrint(g, P.w * k, P.h * k, img, nameNow(), P.fill);
   g.restore();
 }
 let printCache = { key: '', p: null };
@@ -471,19 +529,34 @@ function mugMock(g, W, H, hex, art) {   // Entwurf in 500 x 420 Einheiten, Henke
   g.fillStyle = gi; g.beginPath(); g.ellipse(cx, top + 1, rx - 11, ry - 7, 0, 0, 6.3); g.fill();
   g.restore();
 }
+const softBlob = (g, x, y, rx, ry, rot, rgb, a) => { g.save(); g.translate(x, y); g.rotate(rot); g.scale(rx, ry); const gr = g.createRadialGradient(0, 0, 0, 0, 0, 1); gr.addColorStop(0, `rgba(${rgb},${a})`); gr.addColorStop(1, `rgba(${rgb},0)`); g.fillStyle = gr; g.beginPath(); g.arc(0, 0, 1, 0, 6.3); g.fill(); g.restore(); };
+function pillowMock(g, W, H, hex, art) {   // Entwurf 500 x 460: Kissen von vorn, leicht gewölbt, Ecken gezipfelt
+  const s = Math.min(W / 500, H / 460); g.save(); g.translate((W - 500 * s) / 2, (H - 460 * s) / 2); g.scale(s, s);
+  const body = new Path2D(); body.moveTo(64, 56); body.quadraticCurveTo(250, 26, 436, 56); body.quadraticCurveTo(472, 232, 436, 404); body.quadraticCurveTo(250, 436, 64, 404); body.quadraticCurveTo(28, 232, 64, 56); body.closePath();
+  g.fillStyle = 'rgba(60,20,120,0.16)'; g.beginPath(); g.ellipse(250, 432, 190, 13, 0, 0, 6.3); g.fill();
+  g.save(); g.shadowColor = 'rgba(50,20,100,0.28)'; g.shadowBlur = 20; g.shadowOffsetY = 10; g.fillStyle = '#f4f1f8'; g.fill(body); g.restore();
+  g.save(); g.clip(body); g.drawImage(art, 28, 28, 444, 410);
+  const rg = g.createRadialGradient(240, 200, 30, 250, 232, 310); rg.addColorStop(0, 'rgba(255,255,255,0.18)'); rg.addColorStop(0.5, 'rgba(255,255,255,0)'); rg.addColorStop(1, 'rgba(30,10,70,0.34)'); g.fillStyle = rg; g.fillRect(0, 0, 500, 460);
+  for (const [x, y, r] of [[68, 60, 0.75], [432, 60, -0.75], [68, 400, -0.75], [432, 400, 0.75]]) { softBlob(g, x, y, 56, 22, r, '30,10,70', 0.34); softBlob(g, x + (250 - x) * 0.2, y + (232 - y) * 0.2, 70, 12, r, '30,10,70', 0.14); }
+  softBlob(g, 190, 150, 70, 30, -0.5, '255,255,255', 0.14);
+  g.restore();
+  g.lineWidth = 2; g.strokeStyle = 'rgba(40,20,80,0.2)'; g.stroke(body);
+  g.save(); g.translate(250, 232); g.scale(0.955, 0.955); g.translate(-250, -232); g.setLineDash([5, 4]); g.strokeStyle = 'rgba(255,255,255,0.45)'; g.lineWidth = 1.6; g.stroke(body); g.restore();
+  g.restore();
+}
 async function drawPreview() {
   const my = ++prevSeq, key = curKey(), P = PRODUCTS[key], cv = $('printPrev'), mug = P.kind === 'head';
-  const img = await printImg(P.kind); if (my !== prevSeq) return;
-  const k = mug ? 0.5 : 0.25, art = document.createElement('canvas'); art.width = Math.round(P.w * k); art.height = Math.round(P.h * k);
+  const img = await printImg(P.sprite || P.kind); if (my !== prevSeq) return;
+  const k = mug ? 0.5 : P.kind === 'pillow' ? 0.15 : 0.25, art = document.createElement('canvas'); art.width = Math.round(P.w * k); art.height = Math.round(P.h * k);
   paintPrint(art.getContext('2d'), key, k, img);
   const hex = (P.colors.find((c) => c[0] === opt[key].color) || [])[1] || '#ffffff';
-  cv.width = mug ? 1000 : 1120; cv.height = mug ? 840 : 1280; cv.classList.toggle('tall', !mug);
-  const g = cv.getContext('2d'); g.clearRect(0, 0, cv.width, cv.height); (mug ? mugMock : teeMock)(g, cv.width, cv.height, hex, art);
+  cv.width = mug ? 1000 : P.kind === 'pillow' ? 1000 : 1120; cv.height = mug ? 840 : P.kind === 'pillow' ? 920 : 1280; cv.classList.toggle('tall', P.kind === 'tee');
+  const g = cv.getContext('2d'); g.clearRect(0, 0, cv.width, cv.height); (mug ? mugMock : P.kind === 'pillow' ? pillowMock : teeMock)(g, cv.width, cv.height, hex, art);
 }
 function buildOpts() {
   const k = curKey(), P = PRODUCTS[k], o = opt[k];
   if (!inStock(k, o.color, P.size || null)) o.color = (P.colors.find((c) => inStock(k, c[0], P.size || null)) || [o.color])[0];
-  $('optColorTitle').textContent = P.colorTitle;
+  $('optColorTitle').textContent = P.colorTitle; $('optColorBox').hidden = P.colors.length < 2;
   const box = $('optColors'); box.innerHTML = '';
   for (const [c, hex] of P.colors) {
     const ok = inStock(k, c, P.size || null), b = document.createElement('button');
@@ -502,46 +575,66 @@ function buildOpts() {
 async function loadConfig() {
   try {
     const c = await (await fetch(API + '/config')).json(); if (!c || !c.ok) return;
-    for (const [k, v] of Object.entries(c.products || {})) { const P = PRODUCTS[k]; if (!P) continue; if (v.w && v.h) { P.w = v.w; P.h = v.h; } if (v.price) P.price = v.price; if (v.stock) P.stock = v.stock; }
+    for (const [k, v] of Object.entries(c.products || {})) { const P = PRODUCTS[k]; if (!P) continue; if (v.w && v.h && !P.keepSize) { P.w = v.w; P.h = v.h; } if (v.price) P.price = v.price; if (v.stock) P.stock = v.stock; }
     buildOpts(); schedulePreview();
   } catch (e) { /* mit den Standardwerten weiter */ }
 }
 const b64url = (s) => btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const money = (p) => (p && p.value != null ? new Intl.NumberFormat('en-US', { style: 'currency', currency: p.currency || 'USD' }).format(p.value) : '');
 function setMsg(t, err) { const m = $('msg'); m.textContent = t || ''; m.classList.toggle('err', !!err); }
-function setBar(f) { $('bar').hidden = !f; $('bar').firstElementChild.style.width = Math.round(f * 100) + '%'; }
-function postOrder(meta, blob, onUp) {
+/* Ladeanimation: laufende Pfoten, wechselnde Sätze, Balken – damit das Warten nach „Order now“ nach Arbeit aussieht und nicht nach Hänger */
+const PHRASES = ['Creating your {x} …', 'Painting your cat on it …', 'Adding the finishing touches ✦', 'Almost there …', 'Still working, thanks for waiting ✦'];
+let loadTimer = 0;
+const loaderSet = (t) => { $('loaderTxt').textContent = t; };
+function loaderOn(t) { $('loader').hidden = false; loaderSet(t); const i = $('barI'); i.className = ''; i.style.width = '4%'; }
+function loaderCreating(noun) {   // Datei ist oben: Balken läuft langsam weiter, Sätze wechseln
+  const i = $('barI'); i.style.width = '72%'; requestAnimationFrame(() => { i.className = 'go'; i.style.width = '96%'; });
+  let n = 0; loaderSet(PHRASES[0].replace('{x}', noun)); clearInterval(loadTimer); loadTimer = setInterval(() => { n = Math.min(n + 1, PHRASES.length - 1); loaderSet(PHRASES[n].replace('{x}', noun)); }, 2800);
+}
+function loaderOff() { clearInterval(loadTimer); $('loader').hidden = true; const i = $('barI'); i.className = ''; i.style.width = '0'; }
+function postOrder(meta, blob, onUp, onSent) {
   return new Promise((resolve, reject) => {
     const x = new XMLHttpRequest(); x.open('POST', API + '/order?m=' + b64url(JSON.stringify(meta))); x.setRequestHeader('Content-Type', 'image/png'); x.timeout = 150000;
     x.upload.onprogress = (e) => { if (e.lengthComputable) onUp(e.loaded / e.total); };
-    x.upload.onload = () => { setBar(0.7); setMsg('Creating your product … this takes a few seconds ✦'); };
+    x.upload.onload = onSent;
     x.onerror = () => reject({ message: 'No connection to the print shop. Please check your internet and try again.' });
     x.ontimeout = () => reject({ message: 'That took too long. Please try again in a minute.' });
     x.onload = () => { let j = null; try { j = JSON.parse(x.responseText); } catch (e) { /* keine Antwort */ } if (x.status >= 200 && x.status < 300 && j && j.ok) resolve(j); else reject(j || { message: 'The print shop did not answer. Please try again.' }); };
     x.send(blob);
   });
 }
-let busy = false, lastOrder = null;
+let busy = false, lastOrder = null, fwdTimer = 0;
+const tick = () => new Promise((r) => requestAnimationFrame(() => setTimeout(r, 30)));   // kurz Luft lassen, damit die Animation sichtbar anläuft, bevor schwer gerechnet wird
 async function order() {
-  if (busy) return; const key = curKey(), P = PRODUCTS[key], o = opt[key], sig = JSON.stringify([key, o, nameNow(), st.coat, st.eye, st.collar, st.style]);
+  if (busy) return; const key = curKey(), P = PRODUCTS[key], o = opt[key], sig = JSON.stringify([key, o, nameNow(), st.coat, st.eye, st.collar, st.style, st.bg]);
   if (lastOrder && lastOrder.sig === sig) { showDone(lastOrder.res, key); return; }
-  busy = true; $('buy').disabled = true; setMsg('Making your print file …'); setBar(0.05);
+  busy = true; $('buy').disabled = true; $('dmAlt').hidden = true; setMsg(''); loaderOn('Making your print file …'); await tick();
   try {
-    const img = await printImg(P.kind); if (!img) throw { message: 'Could not load your cat. Please check your connection and try again.' };
-    const cv = document.createElement('canvas'); cv.width = P.w; cv.height = P.h; paintPrint(cv.getContext('2d'), key, 1, img);
+    const img = await printImg(P.sprite || P.kind); if (!img) throw { message: 'Could not load your cat. Please check your connection and try again.' };
+    await tick(); const cv = document.createElement('canvas'); cv.width = P.w; cv.height = P.h; paintPrint(cv.getContext('2d'), key, 1, img);
     const blob = await new Promise((res) => cv.toBlob(res, 'image/png')); if (!blob) throw { message: 'Your browser could not make the print file. Please try another browser.' };
-    setMsg('Sending your cat to the print shop …');
-    const res = await postOrder({ p: key, color: o.color, size: P.size || o.size, name: nameNow(), coat: st.coat, eye: st.eye, collar: st.collar, style: st.style, w: cv.width, h: cv.height }, blob, (f) => setBar(0.08 + f * 0.6));
-    lastOrder = { sig, res }; setBar(1); showDone(res, key);
-  } catch (e) { setBar(0); setMsg((e && e.message) || 'Something went wrong. Please try again.', true); }
-  finally { busy = false; $('buy').disabled = false; }
+    loaderSet('Sending your cat to the print shop …');
+    const res = await postOrder({ p: key, color: o.color, size: P.size || o.size, name: nameNow(), coat: st.coat, eye: st.eye, collar: st.collar, style: st.style, bg: st.bg, w: cv.width, h: cv.height }, blob, (f) => { $('barI').style.width = (4 + f * 68) + '%'; }, () => loaderCreating(P.noun));
+    lastOrder = { sig, res }; $('barI').style.width = '100%'; showDone(res, key);
+  } catch (e) { setMsg((e && e.message) || 'Something went wrong. Please try again.', true); $('dmAlt').hidden = false; }
+  finally { busy = false; $('buy').disabled = false; loaderOff(); }
 }
 function showDone(r, key) {
-  const P = PRODUCTS[key], o = opt[key], im = $('doneImg'), m = (r.mockups || [])[0];
-  $('prod').hidden = $('opts').hidden = $('orderForm').hidden = $('orderIntro').hidden = true; $('orderDone').hidden = false;
+  const P = PRODUCTS[key], o = opt[key], im = $('doneImg'), m = (r.mockups || [])[0], url = r.checkoutUrl || r.productUrl || '#', emb = document.documentElement.classList.contains('embed');
+  $('prod').hidden = $('opts').hidden = $('orderForm').hidden = $('orderTitle').hidden = true; $('orderDone').hidden = false;
   im.onerror = () => { im.hidden = true; }; if (m) { im.src = m; im.hidden = false; } else im.hidden = true;
-  $('doneTxt').textContent = [nameNow(), P.label, o.color + (P.sizes ? ', ' + o.size : ' inside'), money(r.price)].filter(Boolean).join(' ✦ ');
-  $('doneGo').href = r.checkoutUrl || r.productUrl || '#'; $('doneGo').target = document.documentElement.classList.contains('embed') ? '_top' : '_blank';   // im Shop-Rahmen: im selben Tab zur Kasse (Rahmen ist nicht gesperrt, geprüft 1.11.)
+  $('doneTxt').textContent = [nameNow(), P.label, P.colors.length > 1 ? o.color + (P.sizes ? ', ' + o.size : ' inside') : '', money(r.price)].filter(Boolean).join(' ✦ ');
+  const go = $('doneGo'), wait = $('doneWait'); go.href = url; go.target = emb ? '_top' : '_self'; go.classList.remove('pulse'); wait.hidden = false;
+  const manual = () => { wait.textContent = 'Tap the button to continue ✦'; go.classList.add('pulse'); };
+  // direkt weiter zur Kasse (nach kurzem Blick aufs Produkt). Im Shop-Rahmen sperrt Chrome das Umleiten der ganzen Seite ohne frisches Antippen
+  // (das Bestellen dauert länger als die Freigabe hält) – dann gleich der pulsierende Knopf, ohne „Wir leiten weiter“ vorzugaukeln
+  clearTimeout(fwdTimer);
+  if (emb && !(navigator.userActivation && navigator.userActivation.isActive)) { manual(); return; }
+  wait.textContent = 'Taking you to checkout …';
+  fwdTimer = setTimeout(() => {
+    try { if (emb) window.top.location.href = url; else location.href = url; } catch (e) { manual(); return; }
+    fwdTimer = setTimeout(manual, 2500);   // hat nichts geklappt (z. B. Netz zu langsam), bleibt der Knopf
+  }, 1700);
 }
 function setupOrder() {
   if (!API) return;
@@ -551,7 +644,7 @@ function setupOrder() {
   document.querySelectorAll('#styles button').forEach((b) => b.addEventListener('click', () => { st.style = b.dataset.s; paintStyles(); hashSet(); schedulePreview(); }));
   window.addEventListener('hashchange', paintStyles); paintStyles();
   $('buy').addEventListener('click', order); $('viaDm').addEventListener('click', send);
-  $('doneBack').addEventListener('click', () => { $('prod').hidden = $('opts').hidden = $('orderForm').hidden = $('orderIntro').hidden = false; $('orderDone').hidden = true; setMsg(''); setBar(0); });
+  $('doneBack').addEventListener('click', () => { clearTimeout(fwdTimer); $('prod').hidden = $('opts').hidden = $('orderForm').hidden = $('orderTitle').hidden = false; $('orderDone').hidden = true; setMsg(''); });
   buildOpts(); schedulePreview(); loadConfig();
   if (new URLSearchParams(location.search).has('api')) window.__cm = { PRODUCTS, opt, st, paintPrint, printImg };   // nur für Tests mit lokalem Worker
 }
@@ -560,7 +653,7 @@ async function init() {
   try { await document.fonts.load(`900 40px ${FONT}`); await document.fonts.ready; } catch (e) { /* weiter */ }
   drawTitle(); redraw(); setupOrder();
   $('dl').addEventListener('click', download); $('send').addEventListener('click', send);
-  if (navigator.share) { $('share').hidden = false; $('share').addEventListener('click', share); }
+  $('share').addEventListener('click', share); $('surprise').addEventListener('click', surprise);
   window.addEventListener('hashchange', () => { fromHash(); refreshUI(); if (API) buildOpts(); redraw(); });
 }
 init();
