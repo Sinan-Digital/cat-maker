@@ -269,8 +269,7 @@ function drawCard(img) {
   let h = 7; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) % 997;
   const stats = [['CUTENESS', 100], ['ZOOMIES', 60 + h % 40], ['SLOW BLINK', 80 + h % 20], ['NAP LEVEL', 70 + (h >> 2) % 30]];
   stats.forEach(([n, v], i) => { const y = H * 0.67 + i * H * 0.062; g.textAlign = 'left'; g.font = `800 ${H * 0.0245}px ${FONT}`; g.fillStyle = Y.ink; g.fillText(n, W * 0.09, y + H * 0.018); g.fillStyle = 'rgba(106,76,255,0.18)'; g.beginPath(); g.roundRect(W * 0.38, y, W * 0.4, H * 0.026, H * 0.013); g.fill(); const bg = g.createLinearGradient(W * 0.38, 0, W * 0.78, 0); bg.addColorStop(0, '#ff7ac8'); bg.addColorStop(1, '#8f6bff'); g.fillStyle = bg; g.beginPath(); g.roundRect(W * 0.38, y, W * 0.4 * v / 100, H * 0.026, H * 0.013); g.fill(); g.textAlign = 'right'; g.fillStyle = Y.ink; g.fillText(String(v), W * 0.91, y + H * 0.02); });
-  g.textAlign = 'center'; g.fillStyle = Y.violet; g.font = `800 ${H * 0.022}px ${FONT}`; g.fillText('OFFICIALLY CHOSEN ✦ NO. ' + String(100 + h % 900), W / 2, H * 0.927);
-  g.fillStyle = Y.hot; g.font = `800 ${H * 0.0215}px ${FONT}`; g.fillText('make yours ✦ @whatif.simulated', W / 2, H * 0.958);   // jede geteilte Karte wirbt für den Maker
+  g.textAlign = 'center'; g.fillStyle = Y.violet; g.font = `800 ${H * 0.031}px ${FONT}`; g.fillText('OFFICIALLY CHOSEN ✦ NO. ' + String(100 + h % 900), W / 2, H * 0.94);
   g.restore();
 }
 let drawSeq = 0;
@@ -412,20 +411,42 @@ function schedulePreview() { if (!API) return; clearTimeout(prevTimer); prevTime
 /* Produktansicht: Shirt bzw. Tasse in der gewählten Farbe mit der Druckdatei darauf (selbst gezeichnet, „ungefähr wie das fertige Produkt“) */
 const hexRgb = (h) => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
 const mix = (h, t, a) => { const [r, g, b] = hexRgb(h), [r2, g2, b2] = hexRgb(t), m = (x, y) => Math.round(x + (y - x) * a); return `rgb(${m(r, r2)},${m(g, g2)},${m(b, b2)})`; };
-function teeMock(g, W, H, hex, art) {   // Entwurf in 560 x 600 Einheiten
-  const s = Math.min(W / 560, H / 600); g.save(); g.translate((W - 560 * s) / 2, (H - 600 * s) / 2); g.scale(s, s);
-  const L = [[222, 24], [96, 64], [26, 160], [84, 198], [112, 176], [110, 548]], pts = L.concat(L.map(([x, y]) => [560 - x, y]).reverse());
-  const body = new Path2D(); body.moveTo(...pts[0]); pts.slice(1).forEach((p) => body.lineTo(...p)); body.bezierCurveTo(326, 100, 234, 100, 222, 24); body.closePath();
-  g.fillStyle = 'rgba(60,20,120,0.16)'; g.beginPath(); g.ellipse(280, 556, 175, 10, 0, 0, 6.3); g.fill();
-  g.lineJoin = 'round'; g.lineWidth = 12; g.strokeStyle = 'rgba(40,20,80,0.22)'; g.stroke(body); g.lineWidth = 9; g.strokeStyle = hex; g.stroke(body); g.fillStyle = hex; g.fill(body);
+function teeMock(g, W, H, hex, art) {   // Entwurf in 560 x 640 Einheiten: Shirt hängt am Bügel
+  const s = Math.min(W / 560, H / 640); g.save(); g.translate((W - 560 * s) / 2, (H - 640 * s) / 2); g.scale(s, s);
+  const [r0, g0, b0] = hexRgb(hex), lum = (0.299 * r0 + 0.587 * g0 + 0.114 * b0) / 255, dk = (a) => mix(hex, '#000000', a), lt = (a) => mix(hex, '#ffffff', a);
+  const blob = (x, y, rx, ry, rot, color, a) => { g.save(); g.translate(x, y); g.rotate(rot); g.scale(rx, ry); const gr = g.createRadialGradient(0, 0, 0, 0, 0, 1); gr.addColorStop(0, `rgba(${color},${a})`); gr.addColorStop(1, `rgba(${color},0)`); g.fillStyle = gr; g.beginPath(); g.arc(0, 0, 1, 0, 6.3); g.fill(); g.restore(); };
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  // Silhouette: links oben nach unten, rechts gespiegelt
+  const Lf = [[224, 62], [116, 100], [38, 206], [98, 240], [136, 214], [132, 592]], P = Lf.concat(Lf.map(([x, y]) => [560 - x, y]).reverse());
+  const body = new Path2D(); body.moveTo(...P[0]); P.slice(1).forEach((p, i) => (i === 5 ? body.quadraticCurveTo(280, 616, ...p) : body.lineTo(...p))); body.bezierCurveTo(332, 134, 228, 134, 224, 62); body.closePath();
+  // Bügel: Haken und Hals (steckt im Kragen)
+  g.strokeStyle = '#a3a9b3'; g.lineWidth = 5; g.beginPath(); g.moveTo(280, 70); g.lineTo(280, 40); g.bezierCurveTo(280, 14, 312, 10, 314, 30); g.bezierCurveTo(315, 42, 301, 46, 297, 38); g.stroke();
+  g.fillStyle = '#a97b52'; g.beginPath(); g.moveTo(273, 98); g.lineTo(275, 56); g.lineTo(285, 56); g.lineTo(287, 98); g.closePath(); g.fill();
+  // Körper mit weichem Schatten
+  g.save(); g.shadowColor = 'rgba(50,20,100,0.30)'; g.shadowBlur = 22; g.shadowOffsetY = 12; g.fillStyle = hex; g.fill(body); g.restore();
+  g.lineWidth = 11; g.strokeStyle = 'rgba(30,15,60,0.20)'; g.stroke(body); g.lineWidth = 8; g.strokeStyle = hex; g.stroke(body); g.fillStyle = hex; g.fill(body);
   g.save(); g.clip(body);
-  const sh = g.createLinearGradient(100, 0, 460, 0); sh.addColorStop(0, 'rgba(0,0,0,0.16)'); sh.addColorStop(0.2, 'rgba(0,0,0,0)'); sh.addColorStop(0.5, 'rgba(255,255,255,0.05)'); sh.addColorStop(0.8, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(0,0,0,0.16)'); g.fillStyle = sh; g.fillRect(0, 0, 560, 600);
-  const sv = g.createLinearGradient(0, 0, 0, 600); sv.addColorStop(0, 'rgba(255,255,255,0.10)'); sv.addColorStop(1, 'rgba(0,0,0,0.10)'); g.fillStyle = sv; g.fillRect(0, 0, 560, 600);
-  g.strokeStyle = 'rgba(0,0,0,0.10)'; g.lineWidth = 2; g.beginPath(); g.moveTo(96, 64); g.lineTo(112, 176); g.moveTo(464, 64); g.lineTo(448, 176); g.moveTo(110, 530); g.lineTo(450, 530); g.stroke();   // Nähte
-  g.fillStyle = mix(hex, '#000000', 0.38); g.beginPath(); g.moveTo(222, 24); g.bezierCurveTo(234, -6, 326, -6, 338, 24); g.bezierCurveTo(326, 100, 234, 100, 222, 24); g.fill();   // Innenseite des Kragens
+  // Stoff: Verlauf + feine Körnung
+  const base = g.createLinearGradient(0, 60, 0, 610); base.addColorStop(0, 'rgba(255,255,255,0.08)'); base.addColorStop(1, 'rgba(0,0,0,0.10)'); g.fillStyle = base; g.fillRect(0, 0, 560, 640);
+  const nc = document.createElement('canvas'); nc.width = nc.height = 96; const ng = nc.getContext('2d'), rn = rng(5); for (let i = 0; i < 700; i++) { ng.fillStyle = rn() > 0.5 ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.10)'; ng.fillRect(rn() * 96, rn() * 96, 1.4, 1.4); }
+  g.fillStyle = g.createPattern(nc, 'repeat'); g.globalAlpha = 0.4; g.fillRect(0, 0, 560, 640); g.globalAlpha = 1;
+  // Druck, dann Falten und Licht darüber (der Druck sitzt im Stoff)
+  const pw = 208; g.drawImage(art, 280 - pw / 2, 146, pw, pw * art.height / art.width);
+  g.globalCompositeOperation = 'multiply';
+  blob(158, 270, 26, 110, 0.08, '30,20,60', 0.17); blob(402, 270, 26, 110, -0.08, '30,20,60', 0.17); blob(104, 222, 34, 26, 0.5, '30,20,60', 0.17); blob(456, 222, 34, 26, -0.5, '30,20,60', 0.17);
+  blob(205, 440, 95, 12, 0.16, '30,20,60', 0.11); blob(365, 485, 95, 11, -0.13, '30,20,60', 0.10); blob(280, 146, 80, 18, 0, '30,20,60', 0.16); blob(280, 565, 160, 18, 0, '30,20,60', 0.10);
+  const sd = g.createLinearGradient(128, 0, 432, 0); sd.addColorStop(0, 'rgba(30,20,60,0.20)'); sd.addColorStop(0.14, 'rgba(30,20,60,0)'); sd.addColorStop(0.86, 'rgba(30,20,60,0)'); sd.addColorStop(1, 'rgba(30,20,60,0.20)'); g.fillStyle = sd; g.fillRect(0, 0, 560, 640);
+  g.globalCompositeOperation = 'screen'; const hl = lum < 0.3 ? 0.13 : 0.2; blob(236, 230, 46, 100, 0.08, '255,255,255', hl); blob(330, 360, 40, 90, -0.06, '255,255,255', hl * 0.7); blob(78, 160, 24, 46, -0.9, '255,255,255', hl * 0.8); blob(482, 160, 24, 46, 0.9, '255,255,255', hl * 0.8);
+  g.globalCompositeOperation = 'source-over';
+  // Nähte (Saum, Ärmel, Schulter)
+  g.strokeStyle = lum < 0.5 ? 'rgba(255,255,255,0.13)' : 'rgba(0,0,0,0.17)'; g.lineWidth = 1.6; g.setLineDash([6, 4]); g.beginPath(); g.moveTo(136, 576); g.quadraticCurveTo(280, 598, 424, 576); g.moveTo(52, 214); g.lineTo(106, 246); g.moveTo(508, 214); g.lineTo(454, 246); g.stroke(); g.setLineDash([]);
+  g.strokeStyle = 'rgba(0,0,0,0.12)'; g.lineWidth = 1.8; g.beginPath(); g.moveTo(116, 100); g.quadraticCurveTo(124, 160, 138, 214); g.moveTo(444, 100); g.quadraticCurveTo(436, 160, 422, 214); g.stroke();
   g.restore();
-  g.lineWidth = 11; g.lineCap = 'round'; g.strokeStyle = mix(hex, '#000000', 0.2); g.beginPath(); g.moveTo(222, 26); g.bezierCurveTo(234, 100, 326, 100, 338, 26); g.stroke();   // Kragenrippe
-  g.drawImage(art, 144, 116, 272, 272 * art.height / art.width);
+  // Kragen: Innenseite des Nackens, Rippe
+  g.fillStyle = dk(0.46); g.beginPath(); g.moveTo(224, 62); g.bezierCurveTo(236, 38, 324, 38, 336, 62); g.bezierCurveTo(332, 134, 228, 134, 224, 62); g.fill();
+  g.fillStyle = '#a97b52'; g.beginPath(); g.moveTo(273, 100); g.lineTo(275, 56); g.lineTo(285, 56); g.lineTo(287, 100); g.closePath(); g.fill();
+  g.lineWidth = 13; g.strokeStyle = dk(0.14); g.beginPath(); g.moveTo(224, 64); g.bezierCurveTo(232, 136, 328, 136, 336, 64); g.stroke();
+  g.lineWidth = 2; g.strokeStyle = lum < 0.5 ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.16)'; g.setLineDash([2, 3]); g.beginPath(); g.moveTo(226, 72); g.bezierCurveTo(236, 144, 324, 144, 334, 72); g.stroke(); g.setLineDash([]);
   g.restore();
 }
 function mugMock(g, W, H, hex, art) {   // Entwurf in 500 x 420 Einheiten, Henkel rechts: man sieht die rechte Hälfte der Druckfläche, rund gewölbt
@@ -456,7 +477,7 @@ async function drawPreview() {
   const k = mug ? 0.5 : 0.25, art = document.createElement('canvas'); art.width = Math.round(P.w * k); art.height = Math.round(P.h * k);
   paintPrint(art.getContext('2d'), key, k, img);
   const hex = (P.colors.find((c) => c[0] === opt[key].color) || [])[1] || '#ffffff';
-  cv.width = mug ? 1000 : 1120; cv.height = mug ? 840 : 1200; cv.classList.toggle('tall', !mug);
+  cv.width = mug ? 1000 : 1120; cv.height = mug ? 840 : 1280; cv.classList.toggle('tall', !mug);
   const g = cv.getContext('2d'); g.clearRect(0, 0, cv.width, cv.height); (mug ? mugMock : teeMock)(g, cv.width, cv.height, hex, art);
 }
 function buildOpts() {
