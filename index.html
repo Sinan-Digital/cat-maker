@@ -58,8 +58,8 @@ input[type=text]:focus { border-color: var(--hot); box-shadow: 0 0 0 4px rgba(25
 .chips button[aria-pressed=true] { border-color: var(--hot); box-shadow: 0 0 0 4px rgba(255,61,154,.2); }
 .chips button:disabled { opacity: .35; cursor: not-allowed; text-decoration: line-through; }
 .sw.opt button { width: 40px; height: 40px; }
-#printPrev { display: block; width: 100%; max-width: 420px; height: auto; margin: 14px auto 0; border-radius: 16px; border: 3px solid #fff; box-shadow: 0 8px 18px rgba(60,20,120,.25); background: rgba(255,255,255,.35); }
-#printPrev.tall { max-width: 280px; }
+#printPrev { display: block; width: 100%; max-width: 400px; height: auto; margin: 4px auto 0; filter: drop-shadow(0 10px 14px rgba(60,20,120,.22)); }
+#printPrev.tall { max-width: 340px; }
 .bar { height: 12px; border-radius: 999px; background: rgba(255,255,255,.7); border: 2px solid #fff; overflow: hidden; margin: 14px 4px 0; }
 .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--pink), var(--violet)); transition: width .3s; }
 .linkbtn { appearance: none; background: none; border: 0; padding: 0; font: inherit; font-weight: 800; color: var(--violet); text-decoration: underline; cursor: pointer; }
@@ -125,12 +125,14 @@ html.embed .only-embed a { color: var(--violet); }
       <label><input type="radio" name="p" value="tee"><span>Tee<small>soft unisex cotton, XS to 2XL</small></span><span class="price">$29</span></label>
     </div>
     <div class="auto-only" id="opts">
+      <h3>Style</h3>
+      <div id="styles" class="chips" role="group" aria-label="Style"><button type="button" data-s="sparkle">Sparkle ✦</button><button type="button" data-s="clean">Clean</button></div>
+      <canvas id="printPrev" width="1000" height="840" role="img" aria-label="Preview of your product with your cat"></canvas>
+      <p class="note" style="text-align:center;margin:0 0 4px">Your preview ✦ the real product photo comes after you tap Order now.</p>
       <h3 id="optColorTitle">Inside color</h3>
       <div id="optColors" class="sw opt" role="group" aria-label="Color"></div>
       <div id="optColorName" class="coatname"></div>
       <div id="optSizeBox" hidden><h3>Size</h3><div id="optSizes" class="chips" role="group" aria-label="Size"></div></div>
-      <canvas id="printPrev" width="900" height="350" role="img" aria-label="Preview of the artwork we print"></canvas>
-      <p class="note" style="text-align:center;margin-top:8px">The artwork we print ✦ you'll see your product photo next.</p>
     </div>
     <div id="orderForm">
       <div class="dm-only">
@@ -182,7 +184,7 @@ const COATS = [
 const EYES = [['green', 'Green', '#7ccf4a'], ['blue', 'Blue', '#5fb0e8'], ['amber', 'Amber', '#f2c230'], ['copper', 'Copper', '#d9822b']];
 const COLLARS = [['red', 'Red', '#d8343c'], ['pink', 'Pink', '#ff5db3'], ['aqua', 'Aqua', '#3fb6e8'], ['yellow', 'Yellow', '#f2c230'], ['violet', 'Violet', '#8f6bff'], ['black', 'Black', '#26262b']];
 const $ = (id) => document.getElementById(id);
-const st = { name: 'MANGO', coat: 'orange-tabby', eye: 'green', collar: 'red' };
+const st = { name: 'MANGO', coat: 'orange-tabby', eye: 'green', collar: 'red', style: 'sparkle' };   // style: sparkle (Y2K, bunt) | clean (schlicht, für alle)
 
 /* ——— gleiche Zeichenhelfer wie bei den Shop-Motiven (Y2K-Stil) ——— */
 const canvas2d = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d')]; };
@@ -278,7 +280,7 @@ function redraw() { const my = ++drawSeq; drawCard(null); sprite(st.coat, st.eye
 const coatLabel = (id) => (COATS.find((c) => c[0] === id) || [])[1];
 const eyeLabel = (id) => (EYES.find((c) => c[0] === id) || [])[1];
 const collarLabel = (id) => (COLLARS.find((c) => c[0] === id) || [])[1];
-function hashSet() { const p = new URLSearchParams({ n: st.name, c: st.coat, e: st.eye, k: st.collar }); try { history.replaceState(null, '', '#' + p.toString()); } catch (e) { /* egal */ } const o = $('own'); if (o) o.href = 'https://sinan-digital.github.io/cat-maker/#' + p.toString(); }
+function hashSet() { const p = new URLSearchParams({ n: st.name, c: st.coat, e: st.eye, k: st.collar }); if (st.style === 'clean') p.set('s', 'clean'); try { history.replaceState(null, '', '#' + p.toString()); } catch (e) { /* egal */ } const o = $('own'); if (o) o.href = 'https://sinan-digital.github.io/cat-maker/#' + p.toString(); }
 function refreshUI() {
   document.querySelectorAll('#coats button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.coat)));
   document.querySelectorAll('#eyes button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.eye)));
@@ -293,7 +295,7 @@ function build() {
 }
 function fromHash() {
   const p = new URLSearchParams(location.hash.slice(1)); const n = (p.get('n') || '').toUpperCase().replace(/[^A-Z0-9 ÄÖÜß'!?.-]/g, '').slice(0, 12), c = p.get('c'), e = p.get('e'), k = p.get('k');
-  if (n) st.name = n; if (COATS.some((x) => x[0] === c)) st.coat = c; if (EYES.some((x) => x[0] === e)) st.eye = e; if (COLLARS.some((x) => x[0] === k)) st.collar = k; $('name').value = st.name;
+  if (n) st.name = n; if (COATS.some((x) => x[0] === c)) st.coat = c; if (EYES.some((x) => x[0] === e)) st.eye = e; if (COLLARS.some((x) => x[0] === k)) st.collar = k; st.style = p.get('s') === 'clean' ? 'clean' : 'sparkle'; $('name').value = st.name;
 }
 function cardBlob() { return new Promise((res) => $('card').toBlob(res, 'image/png')); }
 async function download() { const b = await cardBlob(); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = (st.name || 'cat').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-cat-card.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
@@ -341,13 +343,44 @@ function mugBlock(g, cx, W, H, head, name) {
   bubbleText(g, name, cx, H * 0.8, H * 0.2, { maxW: tw });
   bubbleText(g, 'OFFICIALLY CHOSEN ✦', cx, H * 0.92, H * 0.08, { maxW: tw, fill: ['#ffffff', '#7fe6ff', '#1fa8e8'] });
 }
+/* Clean-Stil: schlicht und für alle (Creme, Tinte, Tatzenmuster), ohne Herzen und Schmetterlinge */
+const CLEAN = { ink: '#1f2233', cream: '#f6efe3', sky: '#d3e4ec' };
+function pawPrint(g, x, y, s, rot) {
+  g.save(); g.translate(x, y); g.rotate(rot); g.beginPath(); g.ellipse(0, s * 0.25, s * 0.45, s * 0.38, 0, 0, 6.3);
+  [[-0.6, -0.3], [-0.22, -0.62], [0.22, -0.62], [0.6, -0.3]].forEach(([a, b]) => { g.moveTo(a * s + s * 0.17, b * s); g.ellipse(a * s, b * s, s * 0.17, s * 0.23, 0, 0, 6.3); }); g.fill(); g.restore();
+}
+function flatText(g, text, cx, baseY, size, { maxW = Infinity, color = CLEAN.ink, spacing = 0.02 } = {}) {
+  g.save(); g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.fillStyle = color; const set = (sz) => { g.font = `900 ${sz}px ${FONT}`; if ('letterSpacing' in g) g.letterSpacing = `${(sz * spacing).toFixed(1)}px`; };
+  set(size); const w = g.measureText(text).width; if (w > maxW) { size *= maxW / w; set(size); } g.fillText(text, cx, baseY); g.restore();
+}
 function mugArt(g, W, H, head, name) {
+  if (st.style === 'clean') {
+    const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, CLEAN.cream); bg.addColorStop(1, '#ebe2d3'); g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    const R = rng(71); g.fillStyle = 'rgba(31,34,51,0.07)'; for (let i = 0; i < 26; i++) pawPrint(g, R() * W, R() * H, (0.035 + R() * 0.035) * H, (R() - 0.5) * 1.4);
+    for (const cx of [W * 0.28, W * 0.72]) {
+      const d = H * 0.56, cy = H * 0.34;
+      g.fillStyle = CLEAN.sky; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.fill();
+      if (head) { g.save(); g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.clip(); g.drawImage(head, cx - d * 0.55, cy - d * 0.52, d * 1.1, d * 1.1); g.restore(); }
+      g.lineWidth = d * 0.05; g.strokeStyle = CLEAN.ink; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.stroke();
+      flatText(g, name, cx, H * 0.8, H * 0.2, { maxW: W * 0.33 }); flatText(g, 'OFFICIALLY CHOSEN ✦', cx, H * 0.92, H * 0.065, { maxW: W * 0.33, spacing: 0.12 });
+    }
+    return;
+  }
   y2kBackdrop(g, W, H, { seed: 71, stars: 40, hearts: 8, butterflies: 4 });
   mugBlock(g, W * 0.28, W, H, head, name); mugBlock(g, W * 0.72, W, H, head, name);
+}
+function teeArtClean(g, body, name) {   // Abzeichen mit Katze + Namensschild, funktioniert auf jeder Shirtfarbe
+  const cx = TW / 2, cy = TH * 0.3, D = TW * 0.74;
+  g.fillStyle = CLEAN.cream; g.beginPath(); g.arc(cx, cy, D / 2, 0, 6.3); g.fill(); g.lineWidth = 90; g.strokeStyle = CLEAN.ink; g.stroke();
+  if (body) { const k = (D * 0.92) / 1485; g.drawImage(body, cx - 960.5 * k, cy - 956.5 * k, 1980 * k, 1750 * k); }   // Katze (im Baustein 1093 x 1485 groß) mittig im Kreis
+  const px = TW * 0.06, py = TH * 0.605, pw = TW * 0.88, ph = TH * 0.235;
+  g.beginPath(); g.roundRect(px, py, pw, ph, 150); g.fillStyle = CLEAN.cream; g.fill(); g.lineWidth = 80; g.lineJoin = 'round'; g.strokeStyle = CLEAN.ink; g.stroke();
+  flatText(g, name, TW / 2, py + ph * 0.64, TH * 0.13, { maxW: TW * 0.78 }); flatText(g, 'OFFICIALLY CHOSEN ✦', TW / 2, py + ph * 0.88, TH * 0.036, { maxW: TW * 0.78, spacing: 0.14 });
 }
 // Baby-Tee: durchsichtiges Motiv, gezeichnet in 3600 x 4200 Einheiten (wie y2kCatTee), danach auf die Druckfläche zugeschnitten
 const TW = 3600, TH = 4200;
 function teeArt(g, body, name) {
+  if (st.style === 'clean') return teeArtClean(g, body, name);
   chromeHeart(g, TW * 0.5, TH * 0.34, TW * 0.5, 0.0, 'pink');
   if (body) g.drawImage(body, TW * 0.0875, TH * 0.013, TW * 0.825, TH * 0.625);   // Katze größer als in y2kCatTee: sie ist die Hauptfigur
   const R = rng(4); for (let i = 0; i < 9; i++) star4(g, TW * (0.1 + R() * 0.8), TH * (0.04 + R() * 0.5), TW * (0.02 + R() * 0.035), i % 3 ? '#ffffff' : Y.butter, 0, 1);
@@ -376,12 +409,55 @@ function printImg(kind) {   // hochaufgelöste Katze für die Druckdatei; nur di
 }
 let prevTimer = 0, prevSeq = 0;
 function schedulePreview() { if (!API) return; clearTimeout(prevTimer); prevTimer = setTimeout(drawPreview, 200); }
+/* Produktansicht: Shirt bzw. Tasse in der gewählten Farbe mit der Druckdatei darauf (selbst gezeichnet, „ungefähr wie das fertige Produkt“) */
+const hexRgb = (h) => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+const mix = (h, t, a) => { const [r, g, b] = hexRgb(h), [r2, g2, b2] = hexRgb(t), m = (x, y) => Math.round(x + (y - x) * a); return `rgb(${m(r, r2)},${m(g, g2)},${m(b, b2)})`; };
+function teeMock(g, W, H, hex, art) {   // Entwurf in 560 x 600 Einheiten
+  const s = Math.min(W / 560, H / 600); g.save(); g.translate((W - 560 * s) / 2, (H - 600 * s) / 2); g.scale(s, s);
+  const L = [[222, 24], [96, 64], [26, 160], [84, 198], [112, 176], [110, 548]], pts = L.concat(L.map(([x, y]) => [560 - x, y]).reverse());
+  const body = new Path2D(); body.moveTo(...pts[0]); pts.slice(1).forEach((p) => body.lineTo(...p)); body.bezierCurveTo(326, 100, 234, 100, 222, 24); body.closePath();
+  g.fillStyle = 'rgba(60,20,120,0.16)'; g.beginPath(); g.ellipse(280, 556, 175, 10, 0, 0, 6.3); g.fill();
+  g.lineJoin = 'round'; g.lineWidth = 12; g.strokeStyle = 'rgba(40,20,80,0.22)'; g.stroke(body); g.lineWidth = 9; g.strokeStyle = hex; g.stroke(body); g.fillStyle = hex; g.fill(body);
+  g.save(); g.clip(body);
+  const sh = g.createLinearGradient(100, 0, 460, 0); sh.addColorStop(0, 'rgba(0,0,0,0.16)'); sh.addColorStop(0.2, 'rgba(0,0,0,0)'); sh.addColorStop(0.5, 'rgba(255,255,255,0.05)'); sh.addColorStop(0.8, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(0,0,0,0.16)'); g.fillStyle = sh; g.fillRect(0, 0, 560, 600);
+  const sv = g.createLinearGradient(0, 0, 0, 600); sv.addColorStop(0, 'rgba(255,255,255,0.10)'); sv.addColorStop(1, 'rgba(0,0,0,0.10)'); g.fillStyle = sv; g.fillRect(0, 0, 560, 600);
+  g.strokeStyle = 'rgba(0,0,0,0.10)'; g.lineWidth = 2; g.beginPath(); g.moveTo(96, 64); g.lineTo(112, 176); g.moveTo(464, 64); g.lineTo(448, 176); g.moveTo(110, 530); g.lineTo(450, 530); g.stroke();   // Nähte
+  g.fillStyle = mix(hex, '#000000', 0.38); g.beginPath(); g.moveTo(222, 24); g.bezierCurveTo(234, -6, 326, -6, 338, 24); g.bezierCurveTo(326, 100, 234, 100, 222, 24); g.fill();   // Innenseite des Kragens
+  g.restore();
+  g.lineWidth = 11; g.lineCap = 'round'; g.strokeStyle = mix(hex, '#000000', 0.2); g.beginPath(); g.moveTo(222, 26); g.bezierCurveTo(234, 100, 326, 100, 338, 26); g.stroke();   // Kragenrippe
+  g.drawImage(art, 144, 116, 272, 272 * art.height / art.width);
+  g.restore();
+}
+function mugMock(g, W, H, hex, art) {   // Entwurf in 500 x 420 Einheiten, Henkel rechts: man sieht die rechte Hälfte der Druckfläche, rund gewölbt
+  const s = Math.min(W / 500, H / 420); g.save(); g.translate((W - 500 * s) / 2, (H - 420 * s) / 2); g.scale(s, s);
+  const cx = 225, rx = 140, ry = 30, top = 66, bot = 384;
+  g.fillStyle = 'rgba(60,20,120,0.16)'; g.beginPath(); g.ellipse(cx + 30, bot + 22, 175, 13, 0, 0, 6.3); g.fill();
+  g.lineCap = 'round'; const handle = () => { g.beginPath(); g.moveTo(cx + rx - 6, 130); g.bezierCurveTo(cx + rx + 108, 108, cx + rx + 108, 334, cx + rx - 8, 330); };
+  handle(); g.lineWidth = 30; g.strokeStyle = mix(hex, '#000000', 0.18); g.stroke(); handle(); g.lineWidth = 26; g.strokeStyle = hex; g.stroke();
+  g.save(); g.translate(-3, -3); handle(); g.lineWidth = 5; g.strokeStyle = 'rgba(255,255,255,0.4)'; g.stroke(); g.restore();
+  const bodyP = new Path2D(); bodyP.ellipse(cx, top, rx, ry, 0, Math.PI, 0, true); bodyP.lineTo(cx + rx, bot); bodyP.ellipse(cx, bot, rx, ry, 0, 0, Math.PI, false); bodyP.closePath();
+  g.fillStyle = '#f7f6fb'; g.fill(bodyP); g.save(); g.clip(bodyP);
+  const N = 150, aw = art.width, qw = aw / 4;   // Rundum-Druck: sichtbar ist ein Halbkreis um die Mitte der rechten Hälfte (0,75 · Breite)
+  for (let i = 0; i < N; i++) {
+    const u = ((i + 0.5) / N) * 2 - 1, th = Math.asin(u), sx = 0.75 * aw + (th / (Math.PI / 2)) * qw, sw = Math.min(qw * 0.2, Math.max(1.5, (qw * Math.PI) / 2 / N / Math.sqrt(1 - u * u + 0.002) * 0.9)), c = ry * Math.sqrt(1 - u * u);
+    g.drawImage(art, sx - sw / 2, 0, sw, art.height, cx - rx + (i * 2 * rx) / N, top + c, (2 * rx) / N + 0.8, bot - top);
+  }
+  const sh = g.createLinearGradient(cx - rx, 0, cx + rx, 0); sh.addColorStop(0, 'rgba(30,10,70,0.34)'); sh.addColorStop(0.16, 'rgba(30,10,70,0)'); sh.addColorStop(0.3, 'rgba(255,255,255,0.30)'); sh.addColorStop(0.36, 'rgba(255,255,255,0)'); sh.addColorStop(0.8, 'rgba(30,10,70,0)'); sh.addColorStop(1, 'rgba(30,10,70,0.38)');
+  g.fillStyle = sh; g.fillRect(cx - rx, 0, 2 * rx, 440); g.restore();
+  g.lineWidth = 2; g.strokeStyle = 'rgba(40,20,80,0.18)'; g.stroke(bodyP);
+  g.fillStyle = '#ffffff'; g.beginPath(); g.ellipse(cx, top, rx, ry, 0, 0, 6.3); g.fill(); g.stroke();   // Rand
+  const gi = g.createRadialGradient(cx - 30, top - 4, 4, cx, top, rx); gi.addColorStop(0, hex); gi.addColorStop(1, mix(hex, '#000000', 0.32));
+  g.fillStyle = gi; g.beginPath(); g.ellipse(cx, top + 1, rx - 11, ry - 7, 0, 0, 6.3); g.fill();
+  g.restore();
+}
 async function drawPreview() {
-  const my = ++prevSeq, key = curKey(), P = PRODUCTS[key], cv = $('printPrev'), k = (P.kind === 'head' ? 900 : 640) / P.w;
+  const my = ++prevSeq, key = curKey(), P = PRODUCTS[key], cv = $('printPrev'), mug = P.kind === 'head';
   const img = await printImg(P.kind); if (my !== prevSeq) return;
-  cv.width = Math.round(P.w * k); cv.height = Math.round(P.h * k * (P.crop || 1)); cv.classList.toggle('tall', P.kind === 'tee');   // Vorschau ohne den leeren unteren Rand der Druckfläche
-  cv.style.background = P.kind === 'tee' ? ((P.colors.find((c) => c[0] === opt.tee.color) || [])[1] || '#fff') : '';
-  paintPrint(cv.getContext('2d'), key, k, img);
+  const k = mug ? 0.5 : 0.25, art = document.createElement('canvas'); art.width = Math.round(P.w * k); art.height = Math.round(P.h * k);
+  paintPrint(art.getContext('2d'), key, k, img);
+  const hex = (P.colors.find((c) => c[0] === opt[key].color) || [])[1] || '#ffffff';
+  cv.width = mug ? 1000 : 1120; cv.height = mug ? 840 : 1200; cv.classList.toggle('tall', !mug);
+  const g = cv.getContext('2d'); g.clearRect(0, 0, cv.width, cv.height); (mug ? mugMock : teeMock)(g, cv.width, cv.height, hex, art);
 }
 function buildOpts() {
   const k = curKey(), P = PRODUCTS[k], o = opt[k];
@@ -426,7 +502,7 @@ function postOrder(meta, blob, onUp) {
 }
 let busy = false, lastOrder = null;
 async function order() {
-  if (busy) return; const key = curKey(), P = PRODUCTS[key], o = opt[key], sig = JSON.stringify([key, o, nameNow(), st.coat, st.eye, st.collar]);
+  if (busy) return; const key = curKey(), P = PRODUCTS[key], o = opt[key], sig = JSON.stringify([key, o, nameNow(), st.coat, st.eye, st.collar, st.style]);
   if (lastOrder && lastOrder.sig === sig) { showDone(lastOrder.res, key); return; }
   busy = true; $('buy').disabled = true; setMsg('Making your print file …'); setBar(0.05);
   try {
@@ -434,7 +510,7 @@ async function order() {
     const cv = document.createElement('canvas'); cv.width = P.w; cv.height = P.h; paintPrint(cv.getContext('2d'), key, 1, img);
     const blob = await new Promise((res) => cv.toBlob(res, 'image/png')); if (!blob) throw { message: 'Your browser could not make the print file. Please try another browser.' };
     setMsg('Sending your cat to the print shop …');
-    const res = await postOrder({ p: key, color: o.color, size: P.size || o.size, name: nameNow(), coat: st.coat, eye: st.eye, collar: st.collar, w: cv.width, h: cv.height }, blob, (f) => setBar(0.08 + f * 0.6));
+    const res = await postOrder({ p: key, color: o.color, size: P.size || o.size, name: nameNow(), coat: st.coat, eye: st.eye, collar: st.collar, style: st.style, w: cv.width, h: cv.height }, blob, (f) => setBar(0.08 + f * 0.6));
     lastOrder = { sig, res }; setBar(1); showDone(res, key);
   } catch (e) { setBar(0); setMsg((e && e.message) || 'Something went wrong. Please try again.', true); }
   finally { busy = false; $('buy').disabled = false; }
@@ -450,6 +526,9 @@ function setupOrder() {
   if (!API) return;
   document.documentElement.classList.add('auto');
   document.querySelectorAll('input[name=p]').forEach((r) => r.addEventListener('change', () => { buildOpts(); schedulePreview(); }));
+  const paintStyles = () => document.querySelectorAll('#styles button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.s === st.style)));
+  document.querySelectorAll('#styles button').forEach((b) => b.addEventListener('click', () => { st.style = b.dataset.s; paintStyles(); hashSet(); schedulePreview(); }));
+  window.addEventListener('hashchange', paintStyles); paintStyles();
   $('buy').addEventListener('click', order); $('viaDm').addEventListener('click', send);
   $('doneBack').addEventListener('click', () => { $('prod').hidden = $('opts').hidden = $('orderForm').hidden = $('orderIntro').hidden = false; $('orderDone').hidden = true; setMsg(''); setBar(0); });
   buildOpts(); schedulePreview(); loadConfig();
