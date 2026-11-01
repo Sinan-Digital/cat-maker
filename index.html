@@ -444,7 +444,7 @@ function showDone(r, key) {
   $('prod').hidden = $('opts').hidden = $('orderForm').hidden = $('orderIntro').hidden = true; $('orderDone').hidden = false;
   im.onerror = () => { im.hidden = true; }; if (m) { im.src = m; im.hidden = false; } else im.hidden = true;
   $('doneTxt').textContent = [nameNow(), P.label, o.color + (P.sizes ? ', ' + o.size : ' inside'), money(r.price)].filter(Boolean).join(' ✦ ');
-  $('doneGo').href = r.checkoutUrl || r.productUrl || '#';
+  $('doneGo').href = r.checkoutUrl || r.productUrl || '#'; $('doneGo').target = document.documentElement.classList.contains('embed') ? '_top' : '_blank';   // im Shop-Rahmen: im selben Tab zur Kasse (Rahmen ist nicht gesperrt, geprüft 1.11.)
 }
 function setupOrder() {
   if (!API) return;
