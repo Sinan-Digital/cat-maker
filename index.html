@@ -279,7 +279,7 @@ function redraw() { const my = ++drawSeq; drawCard(null); sprite(st.coat, st.eye
 const coatLabel = (id) => (COATS.find((c) => c[0] === id) || [])[1];
 const eyeLabel = (id) => (EYES.find((c) => c[0] === id) || [])[1];
 const collarLabel = (id) => (COLLARS.find((c) => c[0] === id) || [])[1];
-function hashSet() { const p = new URLSearchParams({ n: st.name, c: st.coat, e: st.eye, k: st.collar }); if (st.style === 'clean') p.set('s', 'clean'); try { history.replaceState(null, '', '#' + p.toString()); } catch (e) { /* egal */ } const o = $('own'); if (o) o.href = 'https://sinan-digital.github.io/cat-maker/#' + p.toString(); }
+function hashSet() { const p = new URLSearchParams({ n: st.name, c: st.coat, e: st.eye, k: st.collar }); if (st.style === 'clean') p.set('s', 'clean'); if (curKey() !== 'mug11') p.set('p', curKey()); try { history.replaceState(null, '', '#' + p.toString()); } catch (e) { /* egal */ } const o = $('own'); if (o) o.href = 'https://sinan-digital.github.io/cat-maker/#' + p.toString(); }
 function refreshUI() {
   document.querySelectorAll('#coats button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.coat)));
   document.querySelectorAll('#eyes button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === st.eye)));
@@ -294,7 +294,7 @@ function build() {
 }
 function fromHash() {
   const p = new URLSearchParams(location.hash.slice(1)); const n = (p.get('n') || '').toUpperCase().replace(/[^A-Z0-9 ÄÖÜß'!?.-]/g, '').slice(0, 12), c = p.get('c'), e = p.get('e'), k = p.get('k');
-  if (n) st.name = n; if (COATS.some((x) => x[0] === c)) st.coat = c; if (EYES.some((x) => x[0] === e)) st.eye = e; if (COLLARS.some((x) => x[0] === k)) st.collar = k; st.style = p.get('s') === 'clean' ? 'clean' : 'sparkle'; $('name').value = st.name;
+  if (n) st.name = n; if (COATS.some((x) => x[0] === c)) st.coat = c; if (EYES.some((x) => x[0] === e)) st.eye = e; if (COLLARS.some((x) => x[0] === k)) st.collar = k; st.style = p.get('s') === 'clean' ? 'clean' : 'sparkle'; const pk = p.get('p'), pr = ['mug11', 'mug15', 'tee'].includes(pk) && document.querySelector(`input[name=p][value=${pk}]`); if (pr) pr.checked = true; $('name').value = st.name;   // p = Produkt vorauswählen (mug11, mug15, tee)
 }
 function cardBlob() { return new Promise((res) => $('card').toBlob(res, 'image/png')); }
 async function download() { const b = await cardBlob(); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = (st.name || 'cat').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-cat-card.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
@@ -546,7 +546,7 @@ function showDone(r, key) {
 function setupOrder() {
   if (!API) return;
   document.documentElement.classList.add('auto');
-  document.querySelectorAll('input[name=p]').forEach((r) => r.addEventListener('change', () => { buildOpts(); schedulePreview(); }));
+  document.querySelectorAll('input[name=p]').forEach((r) => r.addEventListener('change', () => { buildOpts(); schedulePreview(); hashSet(); }));
   const paintStyles = () => document.querySelectorAll('#styles button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.s === st.style)));
   document.querySelectorAll('#styles button').forEach((b) => b.addEventListener('click', () => { st.style = b.dataset.s; paintStyles(); hashSet(); schedulePreview(); }));
   window.addEventListener('hashchange', paintStyles); paintStyles();
@@ -561,7 +561,7 @@ async function init() {
   drawTitle(); redraw(); setupOrder();
   $('dl').addEventListener('click', download); $('send').addEventListener('click', send);
   if (navigator.share) { $('share').hidden = false; $('share').addEventListener('click', share); }
-  window.addEventListener('hashchange', () => { fromHash(); refreshUI(); redraw(); });
+  window.addEventListener('hashchange', () => { fromHash(); refreshUI(); if (API) buildOpts(); redraw(); });
 }
 init();
 })();
