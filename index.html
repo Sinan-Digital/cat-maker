@@ -381,16 +381,15 @@ const inStock = (k, color, size) => { const s = PRODUCTS[k].stock; if (!s) retur
 function prodText() { const k = curKey(), P = PRODUCTS[k], o = opt[k]; return API && P.colors.length > 1 ? `${P.label} (${o.color}${P.sizes ? ', size ' + o.size : ' inside'})` : P.label; }
 
 // Tasse: Rundum-Druck 2700 x 1050. Der Henkel sitzt an der Naht (links und rechts im Bild), man sieht immer nur eine Hälfte:
-// darum steht dieselbe Anordnung (Katze im Kreis, Name, „Officially Chosen“) in der linken und in der rechten Hälfte (geprüft an den Fourthwall-Fotos vom 1.11.)
+// darum steht dieselbe Anordnung (Katze im Kreis, darunter nur der Name) in der linken und in der rechten Hälfte (geprüft an den Fourthwall-Fotos vom 1.11.)
 function mugBlock(g, cx, W, H, head, name) {
-  const d = H * 0.54, cy = H * 0.34, tw = W * 0.33;
+  const d = H * 0.57, cy = H * 0.345, tw = W * 0.33;
   const gr = g.createLinearGradient(0, cy - d / 2, 0, cy + d / 2); const [c0, c1, c2] = bgNow()[2]; gr.addColorStop(0, c0); gr.addColorStop(0.55, c1); gr.addColorStop(1, c2);
   g.fillStyle = gr; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.fill();
   if (head) { g.save(); g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.clip(); g.drawImage(head, cx - d * 0.55, cy - d * 0.52, d * 1.1, d * 1.1); g.restore(); }
   g.lineWidth = d * 0.04; g.strokeStyle = '#fff'; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.stroke(); g.lineWidth = d * 0.014; g.strokeStyle = Y.violet; g.beginPath(); g.arc(cx, cy, d / 2 + d * 0.022, 0, 6.3); g.stroke();
   star4(g, cx + d * 0.42, cy - d * 0.42, d * 0.14, '#fff', 0, 1);
-  bubbleText(g, name, cx, H * 0.8, H * 0.2, { maxW: tw });
-  bubbleText(g, 'OFFICIALLY CHOSEN ✦', cx, H * 0.92, H * 0.08, { maxW: tw, fill: ['#ffffff', '#7fe6ff', '#1fa8e8'] });
+  bubbleText(g, name, cx, H * 0.88, H * 0.23, { maxW: tw });
 }
 /* Clean-Stil: schlicht und für alle (Creme, Tinte, Tatzenmuster), ohne Herzen und Schmetterlinge */
 const CLEAN = { ink: '#1f2233', cream: '#f6efe3', sky: '#d3e4ec' };
@@ -407,11 +406,11 @@ function mugArt(g, W, H, head, name) {
     const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, CLEAN.cream); bg.addColorStop(1, '#ebe2d3'); g.fillStyle = bg; g.fillRect(0, 0, W, H);
     const R = rng(71); g.fillStyle = 'rgba(31,34,51,0.07)'; for (let i = 0; i < 26; i++) pawPrint(g, R() * W, R() * H, (0.035 + R() * 0.035) * H, (R() - 0.5) * 1.4);
     for (const cx of [W * 0.28, W * 0.72]) {
-      const d = H * 0.56, cy = H * 0.34;
+      const d = H * 0.62, cy = H * 0.37;
       g.fillStyle = bgNow()[4]; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.fill();
       if (head) { g.save(); g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.clip(); g.drawImage(head, cx - d * 0.55, cy - d * 0.52, d * 1.1, d * 1.1); g.restore(); }
       g.lineWidth = d * 0.05; g.strokeStyle = CLEAN.ink; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.stroke();
-      flatText(g, name, cx, H * 0.8, H * 0.2, { maxW: W * 0.33 }); flatText(g, 'OFFICIALLY CHOSEN ✦', cx, H * 0.92, H * 0.065, { maxW: W * 0.33, spacing: 0.12 });
+      flatText(g, name, cx, H * 0.89, H * 0.22, { maxW: W * 0.33 });
     }
     return;
   }
@@ -422,9 +421,9 @@ function teeArtClean(g, body, name) {   // Abzeichen mit Katze + Namensschild, f
   const cx = TW / 2, cy = TH * 0.3, D = TW * 0.74;
   g.fillStyle = CLEAN.cream; g.beginPath(); g.arc(cx, cy, D / 2, 0, 6.3); g.fill(); g.lineWidth = 90; g.strokeStyle = CLEAN.ink; g.stroke();
   if (body) { const k = (D * 0.92) / 1485; g.drawImage(body, cx - 960.5 * k, cy - 956.5 * k, 1980 * k, 1750 * k); }   // Katze (im Baustein 1093 x 1485 groß) mittig im Kreis
-  const px = TW * 0.06, py = TH * 0.605, pw = TW * 0.88, ph = TH * 0.235;
+  const px = TW * 0.06, py = TH * 0.62, pw = TW * 0.88, ph = TH * 0.17;
   g.beginPath(); g.roundRect(px, py, pw, ph, 150); g.fillStyle = CLEAN.cream; g.fill(); g.lineWidth = 80; g.lineJoin = 'round'; g.strokeStyle = CLEAN.ink; g.stroke();
-  flatText(g, name, TW / 2, py + ph * 0.64, TH * 0.13, { maxW: TW * 0.78 }); flatText(g, 'OFFICIALLY CHOSEN ✦', TW / 2, py + ph * 0.88, TH * 0.036, { maxW: TW * 0.78, spacing: 0.14 });
+  flatText(g, name, TW / 2, py + ph * 0.74, TH * 0.12, { maxW: TW * 0.78 });
 }
 // Baby-Tee: durchsichtiges Motiv, gezeichnet in 3600 x 4200 Einheiten (wie y2kCatTee), danach auf die Druckfläche zugeschnitten
 const TW = 3600, TH = 4200;
@@ -434,8 +433,7 @@ function teeArt(g, body, name) {
   if (body) g.drawImage(body, TW * 0.0875, TH * 0.013, TW * 0.825, TH * 0.625);   // Katze größer als in y2kCatTee: sie ist die Hauptfigur
   const R = rng(4); for (let i = 0; i < 9; i++) star4(g, TW * (0.1 + R() * 0.8), TH * (0.04 + R() * 0.5), TW * (0.02 + R() * 0.035), i % 3 ? '#ffffff' : Y.butter, 0, 1);
   chromeHeart(g, TW * 0.14, TH * 0.5, TW * 0.07, -0.4, 'blue'); chromeHeart(g, TW * 0.87, TH * 0.19, TW * 0.06, 0.4, 'blue'); butterfly(g, TW * 0.9, TH * 0.45, TW * 0.07, 0.5); butterfly(g, TW * 0.1, TH * 0.12, TW * 0.06, -0.5);
-  bubbleText(g, name, TW / 2, TH * 0.755, TH * 0.15, { maxW: TW * 0.92 });
-  bubbleText(g, 'OFFICIALLY CHOSEN ✦', TW / 2, TH * 0.885, TH * 0.065, { maxW: TW * 0.9, fill: ['#ffffff', '#7fe6ff', '#1fa8e8'] });
+  bubbleText(g, name, TW / 2, TH * 0.79, TH * 0.17, { maxW: TW * 0.92 });
 }
 function teePrint(g, W, H, body, name, fill = 1) {
   const q = 0.1, [sc, sg] = canvas2d(Math.round(TW * q), Math.round(TH * q)); sg.scale(q, q); teeArt(sg, body, name);   // Probe-Zeichnung klein: wo liegt das Motiv?
