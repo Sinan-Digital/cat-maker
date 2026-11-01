@@ -296,11 +296,11 @@ function drawCard(img) {
   g.lineWidth = W * 0.012; g.strokeStyle = Y.violet; g.beginPath(); g.roundRect(wx, wy, ww, wh, ww * 0.12); g.stroke();
   g.fillStyle = Y.ink; g.textAlign = 'left'; let fs = H * 0.052; g.font = `900 ${fs}px ${FONT}`; const mw = g.measureText(name).width; if (mw > W * 0.5) { fs *= W * 0.5 / mw; g.font = `900 ${fs}px ${FONT}`; }
   g.fillText(name, W * 0.09, H * 0.085);
-  g.textAlign = 'right'; g.font = `800 ${H * 0.026}px ${FONT}`; g.fillStyle = Y.violet; g.fillText('TYPE: CHOSEN ✦', W * 0.91, H * 0.085);
+  g.textAlign = 'right'; g.font = `800 ${H * 0.026}px ${FONT}`; g.fillStyle = Y.violet; g.fillText('TYPE: CAT ✦', W * 0.91, H * 0.085);
   let h = 7; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) % 997;
   const stats = [['CUTENESS', 100], ['ZOOMIES', 60 + h % 40], ['SLOW BLINK', 80 + h % 20], ['NAP LEVEL', 70 + (h >> 2) % 30]];
   stats.forEach(([n, v], i) => { const y = H * 0.67 + i * H * 0.062; g.textAlign = 'left'; g.font = `800 ${H * 0.0245}px ${FONT}`; g.fillStyle = Y.ink; g.fillText(n, W * 0.09, y + H * 0.018); g.fillStyle = 'rgba(106,76,255,0.18)'; g.beginPath(); g.roundRect(W * 0.38, y, W * 0.4, H * 0.026, H * 0.013); g.fill(); const bg = g.createLinearGradient(W * 0.38, 0, W * 0.78, 0); bg.addColorStop(0, '#ff7ac8'); bg.addColorStop(1, '#8f6bff'); g.fillStyle = bg; g.beginPath(); g.roundRect(W * 0.38, y, W * 0.4 * v / 100, H * 0.026, H * 0.013); g.fill(); g.textAlign = 'right'; g.fillStyle = Y.ink; g.fillText(String(v), W * 0.91, y + H * 0.02); });
-  g.textAlign = 'center'; g.fillStyle = Y.violet; g.font = `800 ${H * 0.031}px ${FONT}`; g.fillText('OFFICIALLY CHOSEN ✦ NO. ' + String(100 + h % 900), W / 2, H * 0.94);
+  g.textAlign = 'center'; g.fillStyle = Y.violet; g.font = `800 ${H * 0.031}px ${FONT}`; g.fillText('CAT NO. ' + String(100 + h % 900) + ' ✦', W / 2, H * 0.94);
   g.restore(); if (img) prepShare();
 }
 let drawSeq = 0;
