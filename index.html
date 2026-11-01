@@ -16,6 +16,7 @@
 @font-face { font-family: "Archivo Maker"; src: url(archivo.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
 :root { --ink: #2a1550; --violet: #6a4cff; --hot: #ff3d9a; --pink: #ff7ac8; --baby: #ffc2e6; --sky: #8fd3ff; --lilac: #c4b2ff; --butter: #fff3a3; --aqua: #6fe3ff; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
 html { background: #c9b8ff; }
 body { margin: 0; min-height: 100vh; font-family: "Archivo Maker", system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); line-height: 1.45;
   background: radial-gradient(circle at 15% 8%, rgba(255,255,255,.55) 0 3px, transparent 4px), radial-gradient(circle at 82% 14%, rgba(255,255,255,.6) 0 4px, transparent 5px),
@@ -52,6 +53,20 @@ input[type=text]:focus { border-color: var(--hot); box-shadow: 0 0 0 4px rgba(25
 .prod label:has(input:checked) { border-color: var(--hot); box-shadow: 0 0 0 4px rgba(255,61,154,.2); }
 .prod small { display: block; font-weight: 600; opacity: .75; }
 .prod .price { margin-left: auto; font-weight: 900; color: var(--violet); white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips button { font: inherit; font-weight: 900; font-size: 15px; min-width: 52px; padding: 9px 14px; border-radius: 999px; border: 3px solid var(--lilac); background: #fff; color: var(--ink); cursor: pointer; }
+.chips button[aria-pressed=true] { border-color: var(--hot); box-shadow: 0 0 0 4px rgba(255,61,154,.2); }
+.chips button:disabled { opacity: .35; cursor: not-allowed; text-decoration: line-through; }
+.sw.opt button { width: 40px; height: 40px; }
+#printPrev { display: block; width: 100%; max-width: 420px; height: auto; margin: 14px auto 0; border-radius: 16px; border: 3px solid #fff; box-shadow: 0 8px 18px rgba(60,20,120,.25); background: rgba(255,255,255,.35); }
+#printPrev.tall { max-width: 280px; }
+.bar { height: 12px; border-radius: 999px; background: rgba(255,255,255,.7); border: 2px solid #fff; overflow: hidden; margin: 14px 4px 0; }
+.bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--pink), var(--violet)); transition: width .3s; }
+.linkbtn { appearance: none; background: none; border: 0; padding: 0; font: inherit; font-weight: 800; color: var(--violet); text-decoration: underline; cursor: pointer; }
+#orderDone { text-align: center; }
+#orderDone img { display: block; width: 100%; max-width: 340px; max-height: 340px; object-fit: contain; margin: 12px auto; border-radius: 18px; border: 3px solid #fff; box-shadow: 0 8px 18px rgba(60,20,120,.25); background: #fff; }
+.err { color: #b0207a; }
+html:not(.auto) .auto-only, html.auto .dm-only { display: none; }
 ol.steps { margin: 6px 0 14px; padding-left: 22px; font-weight: 700; }
 ol.steps li { margin: 5px 0; }
 .note { font-size: 13px; font-weight: 600; opacity: .85; margin: 10px 4px 0; }
@@ -103,26 +118,52 @@ html.embed .only-embed a { color: var(--violet); }
 
   <section class="panel" id="order" aria-label="Put your cat on something">
     <h2>Put your cat on something ✦</h2>
-    <p class="note" style="margin-top:0">Your name, your fur, your eyes, printed on demand. Choose what you'd love:</p>
+    <p class="note" id="orderIntro" style="margin-top:0">Your name, your fur, your eyes, printed on demand. Choose what you'd love:</p>
     <div class="prod" id="prod">
-      <label><input type="radio" name="p" value="Mug (11 oz)" checked><span>Mug 11 oz<small>pink or blue inside</small></span><span class="price">from $24</span></label>
-      <label><input type="radio" name="p" value="Mug (15 oz)"><span>Mug 15 oz<small>pink or blue inside</small></span><span class="price">from $27</span></label>
-      <label><input type="radio" name="p" value="Baby Tee"><span>Baby Tee<small>black, white or baby pink</small></span><span class="price">from $39</span></label>
+      <label><input type="radio" name="p" value="mug11" checked><span>Mug 11 oz<small>pink or blue inside</small></span><span class="price">$24</span></label>
+      <label><input type="radio" name="p" value="mug15"><span>Mug 15 oz<small>pink or blue inside</small></span><span class="price">$27</span></label>
+      <label><input type="radio" name="p" value="tee"><span>Tee<small>soft unisex cotton, XS to 2XL</small></span><span class="price">$29</span></label>
     </div>
-    <h3>How it works</h3>
-    <ol class="steps">
-      <li>Tap <b>Send my cat</b>: your details are copied and our Instagram DMs open. Paste, send.</li>
-      <li>We reply with your preview and a private checkout link, usually within a day or two.</li>
-      <li>You order. It's made for you and ships worldwide in about 5 to 11 days.</li>
-    </ol>
-    <button class="btn big" id="send" type="button">Send my cat ✦</button>
-    <div class="msg" id="msg" role="status" aria-live="polite"></div>
-    <p class="note">No Instagram? Use the <a href="https://whatif-simulated-shop.fourthwall.com/contact" style="color:var(--violet);font-weight:800">shop contact form</a> and paste your details there. Prices are before shipping and tax. Code <b>CHOSEN10</b> = 10% off.</p>
+    <div class="auto-only" id="opts">
+      <h3 id="optColorTitle">Inside color</h3>
+      <div id="optColors" class="sw opt" role="group" aria-label="Color"></div>
+      <div id="optColorName" class="coatname"></div>
+      <div id="optSizeBox" hidden><h3>Size</h3><div id="optSizes" class="chips" role="group" aria-label="Size"></div></div>
+      <canvas id="printPrev" width="900" height="350" role="img" aria-label="Preview of the artwork we print"></canvas>
+      <p class="note" style="text-align:center;margin-top:8px">The artwork we print ✦ you'll see your product photo next.</p>
+    </div>
+    <div id="orderForm">
+      <div class="dm-only">
+        <h3>How it works</h3>
+        <ol class="steps">
+          <li>Tap <b>Send my cat</b>: your details are copied and our Instagram DMs open. Paste, send.</li>
+          <li>We reply with your preview and a private checkout link, usually within a day or two.</li>
+          <li>You order. It's made for you and ships worldwide in about 5 to 11 days.</li>
+        </ol>
+        <button class="btn big" id="send" type="button">Send my cat ✦</button>
+      </div>
+      <div class="auto-only">
+        <button class="btn big" id="buy" type="button">Order now ✦</button>
+        <div class="bar" id="bar" hidden><i></i></div>
+      </div>
+      <div class="msg" id="msg" role="status" aria-live="polite"></div>
+      <p class="note auto-only" style="text-align:center">Secure checkout by Fourthwall ✦ ships worldwide in about 5 to 11 days ✦ lovely as a gift: at checkout you can send it straight to someone else.</p>
+      <p class="note auto-only" style="text-align:center">Printed on demand just for you, so please double-check the name. Prefer Instagram? <button class="linkbtn" id="viaDm" type="button">Send my cat by DM instead</button></p>
+      <p class="note">No Instagram? Use the <a href="https://whatif-simulated-shop.fourthwall.com/contact" style="color:var(--violet);font-weight:800">shop contact form</a> and paste your details there. Prices are before shipping and tax. Code <b>CHOSEN10</b> = 10% off.</p>
+    </div>
+    <div id="orderDone" hidden>
+      <h2>Your cat is ready ✦</h2>
+      <img id="doneImg" alt="Your product" width="340" height="340">
+      <p class="lead" id="doneTxt" style="margin-bottom:12px"></p>
+      <a class="btn big" id="doneGo" href="#" target="_blank" rel="noopener">Go to checkout ✦</a>
+      <p class="note">Shipping and tax are shown at checkout. Code <b>CHOSEN10</b> = 10% off. This product was made just for you and is private to your link.</p>
+      <p class="note"><button class="linkbtn" id="doneBack" type="button">Change something</button></p>
+    </div>
   </section>
 
   <footer>
     <p>Made by the cats at <a href="https://whatif-simulated-shop.fourthwall.com/">Chosen By Cats</a> ✦ TikTok <a href="https://www.tiktok.com/@whatif.simulated">@whatif.simulated</a> ✦ Instagram <a href="https://www.instagram.com/whatif_simulated/">@whatif_simulated</a></p>
-    <p>This page stores nothing about you; your cat lives in the link. It is hosted on GitHub Pages, which may log your IP address.
+    <p>This page stores nothing about you; your cat lives in the link. If you order, your cat's name and look are sent to our print partner Fourthwall (through a small order helper at Cloudflare) so your product can be made. It is hosted on GitHub Pages, which may log your IP address.
     <a href="https://sharin-media.de/impressum/">Imprint</a> ✦ <a href="https://sharin-media.de/datenschutz/">Privacy</a></p>
   </footer>
 </div>
@@ -226,11 +267,12 @@ function drawCard(img) {
   let h = 7; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) % 997;
   const stats = [['CUTENESS', 100], ['ZOOMIES', 60 + h % 40], ['SLOW BLINK', 80 + h % 20], ['NAP LEVEL', 70 + (h >> 2) % 30]];
   stats.forEach(([n, v], i) => { const y = H * 0.67 + i * H * 0.062; g.textAlign = 'left'; g.font = `800 ${H * 0.0245}px ${FONT}`; g.fillStyle = Y.ink; g.fillText(n, W * 0.09, y + H * 0.018); g.fillStyle = 'rgba(106,76,255,0.18)'; g.beginPath(); g.roundRect(W * 0.38, y, W * 0.4, H * 0.026, H * 0.013); g.fill(); const bg = g.createLinearGradient(W * 0.38, 0, W * 0.78, 0); bg.addColorStop(0, '#ff7ac8'); bg.addColorStop(1, '#8f6bff'); g.fillStyle = bg; g.beginPath(); g.roundRect(W * 0.38, y, W * 0.4 * v / 100, H * 0.026, H * 0.013); g.fill(); g.textAlign = 'right'; g.fillStyle = Y.ink; g.fillText(String(v), W * 0.91, y + H * 0.02); });
-  g.textAlign = 'center'; g.fillStyle = Y.violet; g.font = `800 ${H * 0.022}px ${FONT}`; g.fillText('OFFICIALLY CHOSEN ✦ NO. ' + String(100 + h % 900), W / 2, H * 0.945);
+  g.textAlign = 'center'; g.fillStyle = Y.violet; g.font = `800 ${H * 0.022}px ${FONT}`; g.fillText('OFFICIALLY CHOSEN ✦ NO. ' + String(100 + h % 900), W / 2, H * 0.927);
+  g.fillStyle = Y.hot; g.font = `800 ${H * 0.0215}px ${FONT}`; g.fillText('make yours ✦ @whatif.simulated', W / 2, H * 0.958);   // jede geteilte Karte wirbt für den Maker
   g.restore();
 }
 let drawSeq = 0;
-function redraw() { const my = ++drawSeq; drawCard(null); sprite(st.coat, st.eye, st.collar, (img) => { if (my === drawSeq) drawCard(img); }); }
+function redraw() { const my = ++drawSeq; drawCard(null); sprite(st.coat, st.eye, st.collar, (img) => { if (my === drawSeq) drawCard(img); }); schedulePreview(); }
 
 /* ——— Bedienung ——— */
 const coatLabel = (id) => (COATS.find((c) => c[0] === id) || [])[1];
@@ -261,7 +303,7 @@ async function share() {
   try { if (navigator.canShare && navigator.canShare({ files: [f] })) await navigator.share({ ...data, files: [f] }); else await navigator.share(data); } catch (e) { /* abgebrochen */ }
 }
 function orderText() {
-  const prod = (document.querySelector('input[name=p]:checked') || {}).value || 'Mug (11 oz)';
+  const prod = prodText();
   const link = 'https://sinan-digital.github.io/cat-maker/#' + new URLSearchParams({ n: st.name, c: st.coat, e: st.eye, k: st.collar });
   return `Hi Chosen By Cats! I made my cat on the Cat Maker ✦\nName: ${st.name}\nFur: ${coatLabel(st.coat)}\nEyes: ${eyeLabel(st.eye)}\nCollar: ${collarLabel(st.collar)}\nI'd love it on: ${prod}\nMy cat: ${link}`;
 }
@@ -271,10 +313,152 @@ async function send() {
   $('msg').textContent = ok ? 'Copied! Paste it in our DMs ✦' : 'Please copy this into our DMs: ' + txt.replace(/\n/g, ' | ');
   setTimeout(() => { window.open('https://ig.me/m/whatif_simulated', '_blank', 'noopener'); }, 600);
 }
+/* ——— Bestellung: Druckdatei im Browser zeichnen, Produkt vom Worker bei Fourthwall anlegen lassen ——— */
+const ORDER_API = 'https://catmaker-orders.sinankohestani87.workers.dev';   // Adresse des Cloudflare-Workers; leer = nur Bestellung per Instagram-DM
+const API = (() => { const o = new URLSearchParams(location.search).get('api'); return o && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(o) ? o : ORDER_API; })();
+// Maße = Druckfläche der Fourthwall-Vorlagen (Tasse: Rundum 9 x 3,5 in bei 300 dpi; Shirt: Front groß 15 x 18 in bei 150 dpi); der Worker meldet sie bei Änderung live über /config
+const MUGCOL = [['Pink', '#f6a1b1'], ['Blue', '#1e9fcd']];
+const PRODUCTS = {
+  mug11: { label: 'Mug 11 oz', kind: 'head', w: 2700, h: 1050, price: 24, size: '11oz', colors: MUGCOL, colorTitle: 'Inside color' },
+  mug15: { label: 'Mug 15 oz', kind: 'head', w: 2700, h: 1050, price: 27, size: '15oz', colors: MUGCOL, colorTitle: 'Inside color' },
+  tee: { label: 'Tee', kind: 'tee', w: 2250, h: 2700, fill: 1, crop: 0.92, price: 29, colors: [['Black', '#151515'], ['White', '#f4f4f4'], ['Pink', '#e3b1c4'], ['Navy', '#2f2e3e'], ['Natural', '#fef1d1']], sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'], colorTitle: 'Shirt color' },
+};
+const opt = { mug11: { color: 'Pink' }, mug15: { color: 'Pink' }, tee: { color: 'Black', size: 'M' } };
+const curKey = () => (document.querySelector('input[name=p]:checked') || {}).value || 'mug11';
+const nameNow = () => (st.name || 'YOUR CAT').trim() || 'YOUR CAT';
+const inStock = (k, color, size) => { const s = PRODUCTS[k].stock; if (!s) return true; const c = s[color]; return !!c && (size ? c[size] !== false : Object.values(c).some(Boolean)); };
+function prodText() { const k = curKey(), P = PRODUCTS[k], o = opt[k]; return API ? `${P.label} (${o.color}${P.sizes ? ', size ' + o.size : ' inside'})` : P.label; }
+
+// Tasse: Rundum-Druck 2700 x 1050. Der Henkel sitzt an der Naht (links und rechts im Bild), man sieht immer nur eine Hälfte:
+// darum steht dieselbe Anordnung (Katze im Kreis, Name, „Officially Chosen“) in der linken und in der rechten Hälfte (geprüft an den Fourthwall-Fotos vom 1.11.)
+function mugBlock(g, cx, W, H, head, name) {
+  const d = H * 0.54, cy = H * 0.34, tw = W * 0.33;
+  const gr = g.createLinearGradient(0, cy - d / 2, 0, cy + d / 2); gr.addColorStop(0, '#8fd3ff'); gr.addColorStop(0.55, '#c9b8ff'); gr.addColorStop(1, '#ffb3dc');
+  g.fillStyle = gr; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.fill();
+  if (head) { g.save(); g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.clip(); g.drawImage(head, cx - d * 0.55, cy - d * 0.52, d * 1.1, d * 1.1); g.restore(); }
+  g.lineWidth = d * 0.04; g.strokeStyle = '#fff'; g.beginPath(); g.arc(cx, cy, d / 2, 0, 6.3); g.stroke(); g.lineWidth = d * 0.014; g.strokeStyle = Y.violet; g.beginPath(); g.arc(cx, cy, d / 2 + d * 0.022, 0, 6.3); g.stroke();
+  star4(g, cx + d * 0.42, cy - d * 0.42, d * 0.14, '#fff', 0, 1);
+  bubbleText(g, name, cx, H * 0.8, H * 0.2, { maxW: tw });
+  bubbleText(g, 'OFFICIALLY CHOSEN ✦', cx, H * 0.92, H * 0.08, { maxW: tw, fill: ['#ffffff', '#7fe6ff', '#1fa8e8'] });
+}
+function mugArt(g, W, H, head, name) {
+  y2kBackdrop(g, W, H, { seed: 71, stars: 40, hearts: 8, butterflies: 4 });
+  mugBlock(g, W * 0.28, W, H, head, name); mugBlock(g, W * 0.72, W, H, head, name);
+}
+// Baby-Tee: durchsichtiges Motiv, gezeichnet in 3600 x 4200 Einheiten (wie y2kCatTee), danach auf die Druckfläche zugeschnitten
+const TW = 3600, TH = 4200;
+function teeArt(g, body, name) {
+  chromeHeart(g, TW * 0.5, TH * 0.34, TW * 0.5, 0.0, 'pink');
+  if (body) g.drawImage(body, TW * 0.0875, TH * 0.013, TW * 0.825, TH * 0.625);   // Katze größer als in y2kCatTee: sie ist die Hauptfigur
+  const R = rng(4); for (let i = 0; i < 9; i++) star4(g, TW * (0.1 + R() * 0.8), TH * (0.04 + R() * 0.5), TW * (0.02 + R() * 0.035), i % 3 ? '#ffffff' : Y.butter, 0, 1);
+  chromeHeart(g, TW * 0.14, TH * 0.5, TW * 0.07, -0.4, 'blue'); chromeHeart(g, TW * 0.87, TH * 0.19, TW * 0.06, 0.4, 'blue'); butterfly(g, TW * 0.9, TH * 0.45, TW * 0.07, 0.5); butterfly(g, TW * 0.1, TH * 0.12, TW * 0.06, -0.5);
+  bubbleText(g, name, TW / 2, TH * 0.755, TH * 0.15, { maxW: TW * 0.92 });
+  bubbleText(g, 'OFFICIALLY CHOSEN ✦', TW / 2, TH * 0.885, TH * 0.065, { maxW: TW * 0.9, fill: ['#ffffff', '#7fe6ff', '#1fa8e8'] });
+}
+function teePrint(g, W, H, body, name, fill = 1) {
+  const q = 0.1, [sc, sg] = canvas2d(Math.round(TW * q), Math.round(TH * q)); sg.scale(q, q); teeArt(sg, body, name);   // Probe-Zeichnung klein: wo liegt das Motiv?
+  const d = sg.getImageData(0, 0, sc.width, sc.height).data; let x0 = sc.width, x1 = 0, y0 = sc.height, y1 = 0;
+  for (let y = 0; y < sc.height; y++) for (let x = 0; x < sc.width; x++) if (d[(y * sc.width + x) * 4 + 3] > 8) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  x0 = Math.max(0, x0 - 1); y0 = Math.max(0, y0 - 1); x1 = Math.min(sc.width - 1, x1 + 1); y1 = Math.min(sc.height - 1, y1 + 1);
+  const ux = x0 / q, uy = y0 / q, cw = (x1 - x0 + 1) / q, ch = (y1 - y0 + 1) / q, pad = 0.02, s = Math.min(W * (1 - 2 * pad) / cw, H * (1 - 2 * pad) / ch) * fill;
+  g.save(); g.translate((W - cw * s) / 2 - ux * s, H * (pad + 0.01) - uy * s); g.scale(s, s); teeArt(g, body, name); g.restore();
+}
+function paintPrint(g, key, k, img) {
+  const P = PRODUCTS[key]; g.save(); g.imageSmoothingQuality = 'high';
+  if (P.kind === 'head') { g.scale(k, k); mugArt(g, P.w, P.h, img, nameNow()); } else teePrint(g, P.w * k, P.h * k, img, nameNow(), P.fill);
+  g.restore();
+}
+let printCache = { key: '', p: null };
+function printImg(kind) {   // hochaufgelöste Katze für die Druckdatei; nur die aktuelle bleibt im Speicher
+  const key = kind + '/' + st.coat + '_' + st.eye + '_' + st.collar; if (printCache.key === key) return printCache.p;
+  const p = new Promise((res) => { const im = new Image(); im.decoding = 'async'; im.onload = () => res(im); im.onerror = () => res(null); im.src = 'print/' + key + '.webp'; });
+  printCache = { key, p }; return p;
+}
+let prevTimer = 0, prevSeq = 0;
+function schedulePreview() { if (!API) return; clearTimeout(prevTimer); prevTimer = setTimeout(drawPreview, 200); }
+async function drawPreview() {
+  const my = ++prevSeq, key = curKey(), P = PRODUCTS[key], cv = $('printPrev'), k = (P.kind === 'head' ? 900 : 640) / P.w;
+  const img = await printImg(P.kind); if (my !== prevSeq) return;
+  cv.width = Math.round(P.w * k); cv.height = Math.round(P.h * k * (P.crop || 1)); cv.classList.toggle('tall', P.kind === 'tee');   // Vorschau ohne den leeren unteren Rand der Druckfläche
+  cv.style.background = P.kind === 'tee' ? ((P.colors.find((c) => c[0] === opt.tee.color) || [])[1] || '#fff') : '';
+  paintPrint(cv.getContext('2d'), key, k, img);
+}
+function buildOpts() {
+  const k = curKey(), P = PRODUCTS[k], o = opt[k];
+  if (!inStock(k, o.color, P.size || null)) o.color = (P.colors.find((c) => inStock(k, c[0], P.size || null)) || [o.color])[0];
+  $('optColorTitle').textContent = P.colorTitle;
+  const box = $('optColors'); box.innerHTML = '';
+  for (const [c, hex] of P.colors) {
+    const ok = inStock(k, c, P.size || null), b = document.createElement('button');
+    b.type = 'button'; b.title = c + (ok ? '' : ' (sold out)'); b.setAttribute('aria-label', c); b.disabled = !ok; b.style.background = hex; b.setAttribute('aria-pressed', String(c === o.color));
+    b.addEventListener('click', () => { o.color = c; buildOpts(); schedulePreview(); }); box.appendChild(b);
+  }
+  $('optColorName').textContent = o.color;
+  $('optSizeBox').hidden = !P.sizes;
+  if (P.sizes) {
+    if (!inStock(k, o.color, o.size)) o.size = P.sizes.find((s) => inStock(k, o.color, s)) || o.size;
+    const cs = $('optSizes'); cs.innerHTML = '';
+    for (const s of P.sizes) { const b = document.createElement('button'); b.type = 'button'; b.textContent = s; b.disabled = !inStock(k, o.color, s); b.setAttribute('aria-pressed', String(s === o.size)); b.addEventListener('click', () => { o.size = s; buildOpts(); }); cs.appendChild(b); }
+  }
+  $('buy').textContent = 'Order now ✦ $' + P.price;
+}
+async function loadConfig() {
+  try {
+    const c = await (await fetch(API + '/config')).json(); if (!c || !c.ok) return;
+    for (const [k, v] of Object.entries(c.products || {})) { const P = PRODUCTS[k]; if (!P) continue; if (v.w && v.h) { P.w = v.w; P.h = v.h; } if (v.price) P.price = v.price; if (v.stock) P.stock = v.stock; }
+    buildOpts(); schedulePreview();
+  } catch (e) { /* mit den Standardwerten weiter */ }
+}
+const b64url = (s) => btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const money = (p) => (p && p.value != null ? new Intl.NumberFormat('en-US', { style: 'currency', currency: p.currency || 'USD' }).format(p.value) : '');
+function setMsg(t, err) { const m = $('msg'); m.textContent = t || ''; m.classList.toggle('err', !!err); }
+function setBar(f) { $('bar').hidden = !f; $('bar').firstElementChild.style.width = Math.round(f * 100) + '%'; }
+function postOrder(meta, blob, onUp) {
+  return new Promise((resolve, reject) => {
+    const x = new XMLHttpRequest(); x.open('POST', API + '/order?m=' + b64url(JSON.stringify(meta))); x.setRequestHeader('Content-Type', 'image/png'); x.timeout = 150000;
+    x.upload.onprogress = (e) => { if (e.lengthComputable) onUp(e.loaded / e.total); };
+    x.upload.onload = () => { setBar(0.7); setMsg('Creating your product … this takes a few seconds ✦'); };
+    x.onerror = () => reject({ message: 'No connection to the print shop. Please check your internet and try again.' });
+    x.ontimeout = () => reject({ message: 'That took too long. Please try again in a minute.' });
+    x.onload = () => { let j = null; try { j = JSON.parse(x.responseText); } catch (e) { /* keine Antwort */ } if (x.status >= 200 && x.status < 300 && j && j.ok) resolve(j); else reject(j || { message: 'The print shop did not answer. Please try again.' }); };
+    x.send(blob);
+  });
+}
+let busy = false, lastOrder = null;
+async function order() {
+  if (busy) return; const key = curKey(), P = PRODUCTS[key], o = opt[key], sig = JSON.stringify([key, o, nameNow(), st.coat, st.eye, st.collar]);
+  if (lastOrder && lastOrder.sig === sig) { showDone(lastOrder.res, key); return; }
+  busy = true; $('buy').disabled = true; setMsg('Making your print file …'); setBar(0.05);
+  try {
+    const img = await printImg(P.kind); if (!img) throw { message: 'Could not load your cat. Please check your connection and try again.' };
+    const cv = document.createElement('canvas'); cv.width = P.w; cv.height = P.h; paintPrint(cv.getContext('2d'), key, 1, img);
+    const blob = await new Promise((res) => cv.toBlob(res, 'image/png')); if (!blob) throw { message: 'Your browser could not make the print file. Please try another browser.' };
+    setMsg('Sending your cat to the print shop …');
+    const res = await postOrder({ p: key, color: o.color, size: P.size || o.size, name: nameNow(), coat: st.coat, eye: st.eye, collar: st.collar, w: cv.width, h: cv.height }, blob, (f) => setBar(0.08 + f * 0.6));
+    lastOrder = { sig, res }; setBar(1); showDone(res, key);
+  } catch (e) { setBar(0); setMsg((e && e.message) || 'Something went wrong. Please try again.', true); }
+  finally { busy = false; $('buy').disabled = false; }
+}
+function showDone(r, key) {
+  const P = PRODUCTS[key], o = opt[key], im = $('doneImg'), m = (r.mockups || [])[0];
+  $('prod').hidden = $('opts').hidden = $('orderForm').hidden = $('orderIntro').hidden = true; $('orderDone').hidden = false;
+  im.onerror = () => { im.hidden = true; }; if (m) { im.src = m; im.hidden = false; } else im.hidden = true;
+  $('doneTxt').textContent = [nameNow(), P.label, o.color + (P.sizes ? ', ' + o.size : ' inside'), money(r.price)].filter(Boolean).join(' ✦ ');
+  $('doneGo').href = r.checkoutUrl || r.productUrl || '#';
+}
+function setupOrder() {
+  if (!API) return;
+  document.documentElement.classList.add('auto');
+  document.querySelectorAll('input[name=p]').forEach((r) => r.addEventListener('change', () => { buildOpts(); schedulePreview(); }));
+  $('buy').addEventListener('click', order); $('viaDm').addEventListener('click', send);
+  $('doneBack').addEventListener('click', () => { $('prod').hidden = $('opts').hidden = $('orderForm').hidden = $('orderIntro').hidden = false; $('orderDone').hidden = true; setMsg(''); setBar(0); });
+  buildOpts(); schedulePreview(); loadConfig();
+  if (new URLSearchParams(location.search).has('api')) window.__cm = { PRODUCTS, opt, st, paintPrint, printImg };   // nur für Tests mit lokalem Worker
+}
 async function init() {
   build(); fromHash(); refreshUI();
   try { await document.fonts.load(`900 40px ${FONT}`); await document.fonts.ready; } catch (e) { /* weiter */ }
-  drawTitle(); redraw();
+  drawTitle(); redraw(); setupOrder();
   $('dl').addEventListener('click', download); $('send').addEventListener('click', send);
   if (navigator.share) { $('share').hidden = false; $('share').addEventListener('click', share); }
   window.addEventListener('hashchange', () => { fromHash(); refreshUI(); redraw(); });
